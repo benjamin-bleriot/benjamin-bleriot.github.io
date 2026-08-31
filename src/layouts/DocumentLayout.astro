@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  app: CollectionEntry<'apps'>;
+  eyebrow: string;
+  title: string;
+  description: string;
+  updated?: Date;
+  placeholder?: boolean;
+}
+
+const { app, eyebrow, title, description, updated, placeholder = false } = Astro.props;
+---
+
+<BaseLayout title={`${title} — ${app.data.name}`} description={description} type="article">
+  <article class="document-page">
+    <header class="document-hero">
+      <div class="container narrow">
+        <a class="back-link" href={`/apps/${app.data.slug}/`}>← {app.data.name}</a>
+        <p class="eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p class="lede">{description}</p>
+        {updated && <p class="document-meta">Last updated <time datetime={updated.toISOString()}>{updated.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time></p>}
+        {placeholder && <aside class="draft-notice"><strong>Draft notice</strong><p>This content is a clearly marked placeholder and has not been legally reviewed.</p></aside>}
+      </div>
+    </header>
+    <div class="container narrow document-body"><slot /></div>
+  </article>
+</BaseLayout>

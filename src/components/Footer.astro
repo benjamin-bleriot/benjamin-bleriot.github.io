@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  apps: CollectionEntry<'apps'>[];
+}
+
+const { apps } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="footer-name" href="/">Benjamin Bleriot</a>
+      <p>Independent iOS developer and app creator.</p>
+    </div>
+    <nav aria-label="Application pages">
+      <h2>Apps</h2>
+      {apps.map((app) => <a href={`/apps/${app.data.slug}/`}>{app.data.name}</a>)}
+    </nav>
+    <nav aria-label="External links">
+      <h2>Elsewhere</h2>
+      <a href="https://github.com/benjamin-bleriot" rel="me noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <p>© {year} Benjamin Bleriot.</p>
+    <p>Made for the open web.</p>
+  </div>
+</footer>

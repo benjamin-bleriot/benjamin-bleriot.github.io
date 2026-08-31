@@ -1,0 +1,15 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Benjamin Bleriot, home">BB</a>
+    <nav aria-label="Main navigation">
+      <a href="/#apps">Apps</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+      {currentPath !== '/' && <a href="/">Home</a>}
+    </nav>
+  </div>
+</header>

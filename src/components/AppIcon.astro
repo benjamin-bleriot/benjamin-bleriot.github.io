@@ -1,0 +1,15 @@
+---
+interface Props {
+  name: string;
+  icon?: string;
+  accent: string;
+  size?: 'small' | 'large';
+}
+
+const { name, icon, accent, size = 'small' } = Astro.props;
+const initials = name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2);
+---
+
+<div class:list={['app-icon', size]} style={`--app-accent: ${accent}`}>
+  {icon ? <img src={icon} alt={`${name} app icon`} width="128" height="128" loading={size === 'small' ? 'lazy' : 'eager'} /> : <span aria-hidden="true">{initials}</span>}
+</div>

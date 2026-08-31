@@ -1,0 +1,15 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import DocumentLayout from '../../layouts/DocumentLayout.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('apps')).map((app) => ({ params: { slug: app.data.slug }, props: { app } }));
+}
+interface Props { app: CollectionEntry<'apps'> }
+const { app } = Astro.props;
+const terms = app.data.terms;
+---
+
+<DocumentLayout app={app} eyebrow="Legal" title="Terms of Use" description={terms.summary} updated={terms.lastUpdated} placeholder={terms.isPlaceholder}>
+  {terms.sections.map((section) => <section><h2>{section.heading}</h2><p>{section.content}</p></section>)}
+</DocumentLayout>

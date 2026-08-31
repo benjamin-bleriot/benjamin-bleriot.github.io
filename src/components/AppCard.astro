@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getAppIcon } from '../lib/apps';
+import AppIcon from './AppIcon.astro';
+import AppStoreButton from './AppStoreButton.astro';
+
+interface Props { app: CollectionEntry<'apps'> }
+const { app } = Astro.props;
+const icon = getAppIcon(app);
+const statusLabel = app.data.status === 'available' ? 'Available' : app.data.status === 'coming-soon' ? 'Coming soon' : 'In development';
+---
+
+<article class="app-card" style={`--app-accent: ${app.data.accent}`}>
+  <div class="app-card-top">
+    <AppIcon name={app.data.name} icon={icon} accent={app.data.accent} />
+    <span class="status-label">{statusLabel}</span>
+  </div>
+  <div>
+    <p class="eyebrow">{app.data.category}</p>
+    <h3><a href={`/apps/${app.data.slug}/`}>{app.data.name}</a></h3>
+    <p>{app.data.shortDescription}</p>
+  </div>
+  <div class="card-actions">
+    <a class="text-link" href={`/apps/${app.data.slug}/`}>Explore the app <span aria-hidden="true">→</span></a>
+    {app.data.appStoreUrl && <AppStoreButton url={app.data.appStoreUrl} compact />}
+  </div>
+</article>

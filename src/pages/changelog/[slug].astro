@@ -1,0 +1,15 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import DocumentLayout from '../../layouts/DocumentLayout.astro';
+import AppChangelog from '../../components/AppChangelog.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('apps')).map((app) => ({ params: { slug: app.data.slug }, props: { app } }));
+}
+interface Props { app: CollectionEntry<'apps'> }
+const { app } = Astro.props;
+---
+
+<DocumentLayout app={app} eyebrow="Release notes" title="Changelog" description={`Updates and release notes for ${app.data.name}.`}>
+  <AppChangelog entries={app.data.changelog} />
+</DocumentLayout>
