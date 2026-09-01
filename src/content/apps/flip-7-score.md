@@ -1,9 +1,9 @@
 ---
 name: "Flip 7 Score Keeper"
 slug: "flip-7-score"
-description: "An iOS application for keeping score during a game of Flip 7."
-shortDescription: "A dedicated score keeper for Flip 7 games."
-category: "Games"
+description: "Une application iOS pour compter les points pendant une partie de Flip 7."
+shortDescription: "Le compteur de scores dédié à Flip 7."
+category: "Jeux"
 status: "available"
 featuredOrder: 2
 appStoreUrl: "https://apps.apple.com/fr/app/flip-score/id6760317673"
@@ -11,50 +11,50 @@ appStoreId: "6760317673"
 icon: ""
 accent: "#C96736"
 hero:
-  title: "The score, without the paperwork."
-  subtitle: "A focused iOS score keeper for your Flip 7 games."
+  title: "Les scores, sans papier ni calcul."
+  subtitle: "Un compteur iOS simple et rapide pour vos parties de Flip 7."
 features:
-  - title: "Score keeping"
-    description: "Keep the score of a Flip 7 game on your iPhone."
+  - title: "Suivi des scores"
+    description: "Gardez le score d’une partie de Flip 7 directement sur votre iPhone."
 screenshots: []
 reviews: []
 faq:
-  - question: "What is Flip 7 Score Keeper?"
-    answer: "It is an iOS application for keeping score during a game of Flip 7."
-  - question: "Where can I download the app?"
-    answer: "Use the App Store button on this page to view the current listing."
+  - question: "Qu’est-ce que Flip 7 Score Keeper ?"
+    answer: "C’est une application iOS qui permet de compter les points pendant une partie de Flip 7."
+  - question: "Où télécharger l’application ?"
+    answer: "Utilisez le bouton App Store de cette page pour accéder à la fiche actuelle."
 technologies: []
 links: []
 privacy:
   lastUpdated: "2026-08-31"
   isPlaceholder: true
-  summary: "This draft outlines the intended privacy information for Flip 7 Score Keeper and must be reviewed against the released app."
+  summary: "Cette page provisoire prépare les informations de confidentialité de Flip 7 Score Keeper et doit être vérifiée avec la version publiée."
   sections:
-    - heading: "Draft status"
-      content: "This page is a publishing placeholder, not a final or legally reviewed privacy policy. Confirmed data practices will replace this notice."
-    - heading: "Information and storage"
-      content: "The app's exact data collection, storage and deletion behavior has not yet been documented on this website."
+    - heading: "Statut du document"
+      content: "Cette page est provisoire et ne constitue pas une politique de confidentialité définitive ou validée juridiquement."
+    - heading: "Informations et stockage"
+      content: "La collecte éventuelle de données, leur stockage et leur suppression ne sont pas encore documentés sur ce site."
     - heading: "Contact"
-      content: "Questions can be submitted through the developer's public GitHub profile linked in the site footer."
+      content: "Les questions peuvent être envoyées via le profil GitHub public du développeur, accessible en pied de page."
 terms:
   lastUpdated: "2026-08-31"
   isPlaceholder: true
-  summary: "These draft terms reserve a public URL for the app and require review against the released product."
+  summary: "Ces conditions provisoires réservent une adresse publique pour l’application et doivent être vérifiées avec la version publiée."
   sections:
-    - heading: "Draft status"
-      content: "These terms are a placeholder and are not presented as legally validated terms of use."
-    - heading: "Using the app"
-      content: "The final terms and usage rules will be added after the release details are confirmed."
-    - heading: "Changes"
-      content: "The publication date and details on this page will be updated when final terms are available."
+    - heading: "Statut du document"
+      content: "Ces conditions sont provisoires et ne sont pas présentées comme des conditions d’utilisation validées juridiquement."
+    - heading: "Utilisation de l’application"
+      content: "Les conditions définitives et les règles d’utilisation seront ajoutées après confirmation des détails de la sortie."
+    - heading: "Modifications"
+      content: "La date de publication et le contenu seront actualisés lorsque les conditions définitives seront disponibles."
 changelog:
-  - version: "Current release"
-    label: "Details to add"
+  - version: "Version actuelle"
+    label: "Détails à compléter"
     additions:
-      - "Verified release notes will be published here."
+      - "Les notes de version vérifiées seront publiées ici."
     fixes: []
 ---
 
-Flip 7 Score Keeper gives players a dedicated place to keep the score of a Flip 7 game on iPhone.
+Flip 7 Score Keeper offre aux joueurs un espace dédié pour suivre les scores d’une partie de Flip 7 sur iPhone.
 
-Additional product details and verified release notes can be added here as they become available.
+Les informations complémentaires et les notes de version vérifiées pourront être ajoutées ici lorsqu’elles seront disponibles.

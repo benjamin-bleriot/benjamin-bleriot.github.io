@@ -33,16 +33,16 @@ const jsonLd = {
   <AppFeatures features={app.data.features} />
   <section class="section app-story" aria-labelledby="story-title">
     <div class="container story-grid">
-      <div><p class="eyebrow">About the app</p><h2 id="story-title">Made for iPhone.</h2></div>
+      <div><p class="eyebrow">À propos</p><h2 id="story-title">Pensée pour l’iPhone.</h2></div>
       <div class="prose"><Content />{app.data.technologies.length > 0 && <ul class="technology-list" aria-label="Technologies">{app.data.technologies.map((technology) => <li>{technology}</li>)}</ul>}</div>
     </div>
   </section>
   <AppReviews reviews={app.data.reviews} />
   <AppFAQ faq={app.data.faq} />
   <section class="section final-cta" style={`--app-accent: ${app.data.accent}`}>
-    <div class="container final-cta-inner"><p class="eyebrow">{app.data.name}</p><h2>{app.data.appStoreUrl ? 'Ready for your next game.' : 'Follow the app’s progress.'}</h2><p>{app.data.shortDescription}</p><AppStoreButton url={app.data.appStoreUrl} /></div>
+    <div class="container final-cta-inner"><p class="eyebrow">{app.data.name}</p><h2>{app.data.appStoreUrl ? 'Prête pour votre prochaine partie.' : 'Suivez l’évolution de l’application.'}</h2><p>{app.data.shortDescription}</p><AppStoreButton url={app.data.appStoreUrl} /></div>
   </section>
-  <nav class="container app-subnav" aria-label={`${app.data.name} information`}>
-    <a href={`/privacy/${app.data.slug}/`}>Privacy</a><a href={`/terms/${app.data.slug}/`}>Terms</a><a href={`/changelog/${app.data.slug}/`}>Changelog</a>
+  <nav class="container app-subnav" aria-label={`Informations sur ${app.data.name}`}>
+    <a href={`/privacy/${app.data.slug}/`}>Confidentialité</a><a href={`/terms/${app.data.slug}/`}>Conditions</a><a href={`/changelog/${app.data.slug}/`}>Versions</a>
   </nav>
 </BaseLayout>

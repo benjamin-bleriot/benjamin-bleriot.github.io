@@ -10,6 +10,6 @@ interface Props { app: CollectionEntry<'apps'> }
 const { app } = Astro.props;
 ---
 
-<DocumentLayout app={app} eyebrow="Release notes" title="Changelog" description={`Updates and release notes for ${app.data.name}.`}>
+<DocumentLayout app={app} eyebrow="Notes de version" title="Historique des versions" description={`Mises à jour et notes de version de ${app.data.name}.`}>
   <AppChangelog entries={app.data.changelog} />
 </DocumentLayout>

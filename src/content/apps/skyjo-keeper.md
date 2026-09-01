@@ -1,9 +1,9 @@
 ---
 name: "Skyjo Keeper"
 slug: "skyjo-keeper"
-description: "An iOS score keeper designed for games of Skyjo, with round-by-round scores, rankings and game history."
-shortDescription: "Keep scores, rounds and rankings together."
-category: "Games"
+description: "Une application iOS pour compter les points au Skyjo, suivre chaque manche, le classement et l’historique des parties."
+shortDescription: "Scores, manches et classement au même endroit."
+category: "Jeux"
 status: "in-development"
 featuredOrder: 1
 appStoreUrl: ""
@@ -11,26 +11,26 @@ appStoreId: ""
 icon: ""
 accent: "#497B68"
 hero:
-  title: "Keep score. Enjoy the game."
-  subtitle: "A focused iOS score keeper for Skyjo games with friends and family."
+  title: "Comptez les points. Profitez de la partie."
+  subtitle: "Le compteur de scores iOS pensé pour vos parties de Skyjo entre amis ou en famille."
 features:
-  - title: "Two to eight players"
-    description: "Set up a game for a small table or a larger group."
-  - title: "Round-by-round scoring"
-    description: "Enter each round and keep the current ranking visible."
-  - title: "Configurable objective"
-    description: "Choose the score objective that fits your game."
-  - title: "Game history"
-    description: "Find the results of previous games in one place."
+  - title: "De 2 à 8 joueurs"
+    description: "Lancez une partie en petit comité ou autour d’une grande table."
+  - title: "Scores par manche"
+    description: "Saisissez chaque manche et gardez le classement sous les yeux."
+  - title: "Objectif configurable"
+    description: "Choisissez le score cible qui correspond à votre partie."
+  - title: "Historique des parties"
+    description: "Retrouvez les résultats de vos parties précédentes."
 screenshots: []
 reviews: []
 faq:
-  - question: "How many players does Skyjo Keeper support?"
-    answer: "Skyjo Keeper supports games with two to eight players."
-  - question: "Can I change the score objective?"
-    answer: "Yes. The score objective can be configured for each game."
-  - question: "Where can I download the app?"
-    answer: "An App Store link will appear on this page when it is available."
+  - question: "Combien de joueurs Skyjo Keeper accepte-t-il ?"
+    answer: "Skyjo Keeper permet de jouer de deux à huit joueurs."
+  - question: "Puis-je modifier le score cible ?"
+    answer: "Oui. L’objectif de score peut être configuré pour chaque partie."
+  - question: "Où télécharger l’application ?"
+    answer: "Un lien App Store apparaîtra sur cette page dès que l’application sera disponible."
 technologies:
   - "SwiftUI"
   - "SwiftData"
@@ -38,33 +38,33 @@ links: []
 privacy:
   lastUpdated: "2026-08-31"
   isPlaceholder: true
-  summary: "This draft outlines the intended privacy information for Skyjo Keeper. It must be reviewed before the app is released."
+  summary: "Cette page provisoire prépare les informations de confidentialité de Skyjo Keeper. Elle devra être vérifiée avant la sortie de l’application."
   sections:
-    - heading: "Draft status"
-      content: "This page is a publishing placeholder, not a final or legally reviewed privacy policy. Data practices will be documented here after they are confirmed."
-    - heading: "Information and storage"
-      content: "The app's final data collection, local storage and deletion behavior has not yet been documented on this website."
+    - heading: "Statut du document"
+      content: "Cette page est un contenu provisoire et non une politique de confidentialité définitive ou validée juridiquement. Les pratiques relatives aux données seront précisées ici après vérification."
+    - heading: "Informations et stockage"
+      content: "La collecte éventuelle de données, leur stockage local et leur suppression ne sont pas encore documentés sur ce site."
     - heading: "Contact"
-      content: "Questions can be submitted through the developer's public GitHub profile linked in the site footer."
+      content: "Les questions peuvent être envoyées via le profil GitHub public du développeur, accessible en pied de page."
 terms:
   lastUpdated: "2026-08-31"
   isPlaceholder: true
-  summary: "These draft terms reserve a public URL for the app and require review before release."
+  summary: "Ces conditions provisoires réservent une adresse publique pour l’application et devront être relues avant sa sortie."
   sections:
-    - heading: "Draft status"
-      content: "These terms are a placeholder and are not presented as legally validated terms of use."
-    - heading: "Using the app"
-      content: "The final terms, eligibility requirements and usage rules will be added when the release details are confirmed."
-    - heading: "Changes"
-      content: "The publication date and details on this page will be updated when final terms are available."
+    - heading: "Statut du document"
+      content: "Ces conditions sont provisoires et ne sont pas présentées comme des conditions d’utilisation validées juridiquement."
+    - heading: "Utilisation de l’application"
+      content: "Les conditions définitives et les règles d’utilisation seront ajoutées lorsque les détails de la sortie seront confirmés."
+    - heading: "Modifications"
+      content: "La date de publication et le contenu de cette page seront actualisés lorsque les conditions définitives seront disponibles."
 changelog:
-  - version: "Unreleased"
-    label: "In development"
+  - version: "Non publiée"
+    label: "En développement"
     additions:
-      - "Public release notes will be published here when a version is available."
+      - "Les notes de version seront publiées ici dès qu’une version sera disponible."
     fixes: []
 ---
 
-Skyjo Keeper is being built as a native iOS companion for keeping score during a game of Skyjo. It keeps player scores, rounds, the current ranking and past games organized without getting in the way of the table.
+Skyjo Keeper est conçu comme un compagnon iOS natif pour compter les points pendant une partie de Skyjo. Il rassemble les scores, les manches, le classement actuel et les parties précédentes sans détourner l’attention du jeu.
 
-The application is made with SwiftUI and uses SwiftData for its data model.
+L’application est développée avec SwiftUI et utilise SwiftData pour son modèle de données.

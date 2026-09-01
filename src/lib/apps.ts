@@ -34,7 +34,7 @@ export function getAppScreenshots(app: AppEntry): Screenshot[] {
     .filter((entry) => entry.isFile() && imageExtensions.has(path.extname(entry.name).toLowerCase()))
     .map((entry) => ({
       image: `/images/apps/${app.data.slug}/screenshots/${entry.name}`,
-      alt: `${app.data.name} screenshot`,
+      alt: `Capture d’écran de ${app.data.name}`,
     }))
     .filter(({ image }) => !declaredPaths.has(image))
     .sort((a, b) => a.image.localeCompare(b.image, undefined, { numeric: true }));
@@ -48,7 +48,7 @@ function publicFileExists(publicPath: string): boolean {
 }
 
 export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('en', {
+  return new Intl.DateTimeFormat('fr-FR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

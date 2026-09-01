@@ -8,7 +8,7 @@ interface Props { app: CollectionEntry<'apps'> }
 const { app } = Astro.props;
 const icon = getAppIcon(app);
 const initials = app.data.name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2);
-const statusLabel = app.data.status === 'available' ? 'Available on the App Store' : app.data.status === 'coming-soon' ? 'Coming soon' : 'In development';
+const statusLabel = app.data.status === 'available' ? 'Disponible sur l’App Store' : app.data.status === 'coming-soon' ? 'Bientôt disponible' : 'En développement';
 ---
 
 <section class="app-hero section" style={`--app-accent: ${app.data.accent}`}>
@@ -22,12 +22,12 @@ const statusLabel = app.data.status === 'available' ? 'Available on the App Stor
       <p class="lede">{app.data.hero.subtitle}</p>
       <div class="hero-actions">
         <AppStoreButton url={app.data.appStoreUrl} />
-        <a class="button button-secondary" href="#features">Discover features</a>
+        <a class="button button-secondary" href="#features">Voir les fonctionnalités</a>
       </div>
     </div>
     <div class="app-hero-art" aria-hidden="true">
       <div class="hero-mark">{icon ? <img src={icon} alt="" width="320" height="320" /> : <span>{initials}</span>}</div>
-      <small>Real product imagery coming soon</small>
+      <small>Icône officielle de l’application</small>
     </div>
   </div>
 </section>

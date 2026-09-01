@@ -19,7 +19,7 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.featuredOrder -
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -29,7 +29,7 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.featuredOrder -
     <SEO {...props} />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a class="skip-link" href="#main-content">Aller au contenu</a>
     <Header />
     <main id="main-content"><slot /></main>
     <Footer apps={apps} />

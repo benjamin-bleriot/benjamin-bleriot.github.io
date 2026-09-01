@@ -6,7 +6,7 @@ const { screenshots, appName } = Astro.props;
 
 <section class="section screenshots-section" id="screenshots" aria-labelledby="screenshots-title">
   <div class="container">
-    <div class="section-heading"><p class="eyebrow">Preview</p><h2 id="screenshots-title">See {appName} in action.</h2></div>
+    <div class="section-heading"><p class="eyebrow">Aperçu</p><h2 id="screenshots-title">Découvrez {appName} en images.</h2></div>
     {screenshots.length > 0 ? (
       <div class="screenshot-strip">
         {screenshots.map((screenshot) => (
@@ -16,7 +16,7 @@ const { screenshots, appName } = Astro.props;
     ) : (
       <div class="empty-screenshots">
         <div class="empty-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div><h3>Screenshots are on their way.</h3><p>Real product images will be added here when they are ready. No mock interface is being shown in their place.</p></div>
+        <div><h3>Les captures arrivent bientôt.</h3><p>Les véritables images de l’application seront ajoutées ici lorsqu’elles seront prêtes. Aucun faux écran ne les remplace.</p></div>
       </div>
     )}
   </div>

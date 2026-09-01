@@ -6,7 +6,7 @@ const { features } = Astro.props;
 
 {features.length > 0 && <section class="section" id="features" aria-labelledby="features-title">
   <div class="container">
-    <div class="section-heading"><p class="eyebrow">Features</p><h2 id="features-title">Designed to stay focused.</h2></div>
+    <div class="section-heading"><p class="eyebrow">Fonctionnalités</p><h2 id="features-title">L’essentiel, sans détour.</h2></div>
     <div class="feature-grid">{features.map((feature, index) => <article><span>{String(index + 1).padStart(2, '0')}</span><h3>{feature.title}</h3><p>{feature.description}</p></article>)}</div>
   </div>
 </section>}

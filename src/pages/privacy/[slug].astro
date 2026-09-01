@@ -10,6 +10,6 @@ const { app } = Astro.props;
 const policy = app.data.privacy;
 ---
 
-<DocumentLayout app={app} eyebrow="Legal" title="Privacy Policy" description={policy.summary} updated={policy.lastUpdated} placeholder={policy.isPlaceholder}>
+<DocumentLayout app={app} eyebrow="Informations légales" title="Politique de confidentialité" description={policy.summary} updated={policy.lastUpdated} placeholder={policy.isPlaceholder}>
   {policy.sections.map((section) => <section><h2>{section.heading}</h2><p>{section.content}</p></section>)}
 </DocumentLayout>

@@ -22,8 +22,8 @@ const { app, eyebrow, title, description, updated, placeholder = false } = Astro
         <p class="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p class="lede">{description}</p>
-        {updated && <p class="document-meta">Last updated <time datetime={updated.toISOString()}>{updated.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time></p>}
-        {placeholder && <aside class="draft-notice"><strong>Draft notice</strong><p>This content is a clearly marked placeholder and has not been legally reviewed.</p></aside>}
+        {updated && <p class="document-meta">Dernière mise à jour le <time datetime={updated.toISOString()}>{updated.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time></p>}
+        {placeholder && <aside class="draft-notice"><strong>Document provisoire</strong><p>Ce contenu est clairement identifié comme provisoire et n’a pas été validé juridiquement.</p></aside>}
       </div>
     </header>
     <div class="container narrow document-body"><slot /></div>

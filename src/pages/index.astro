@@ -2,9 +2,10 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AppCard from '../components/AppCard.astro';
+import { getAppIcon } from '../lib/apps';
 
 const apps = (await getCollection('apps')).sort((a, b) => a.data.featuredOrder - b.data.featuredOrder);
-const description = 'Independent iOS developer Benjamin Bleriot creates focused, native applications for games, personal finance and running.';
+const description = 'Benjamin Bleriot conçoit des applications iOS natives pour les jeux, les finances personnelles et la course à pied.';
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -12,44 +13,49 @@ const jsonLd = [
     name: 'Benjamin Bleriot',
     url: Astro.site?.toString() ?? Astro.url.origin,
     sameAs: ['https://github.com/benjamin-bleriot'],
-    jobTitle: 'iOS Developer',
+    jobTitle: 'Développeur iOS',
   },
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Benjamin Bleriot — iOS Developer',
+    name: 'Benjamin Bleriot — Développeur iOS',
     url: Astro.site?.toString() ?? Astro.url.origin,
     description,
   },
 ];
 ---
 
-<BaseLayout title="Benjamin Bleriot — iOS Developer & App Creator" description={description} canonicalPath="/" jsonLd={jsonLd}>
+<BaseLayout title="Benjamin Bleriot — Développeur iOS" description={description} canonicalPath="/" image="/og.png" jsonLd={jsonLd}>
   <section class="home-hero section">
-    <div class="container home-hero-inner">
-      <p class="eyebrow">Independent iOS developer</p>
-      <h1>Thoughtful apps,<br /><em>made for iPhone.</em></h1>
-      <p class="lede">I’m Benjamin Bleriot. I create focused, native applications that make everyday moments simpler.</p>
-      <div class="hero-actions"><a class="button" href="#apps">Explore the apps</a><a class="button button-secondary" href="#about">About me</a></div>
-      <p class="hero-note"><span></span> Building with SwiftUI in France</p>
+    <div class="container home-hero-grid">
+      <div class="home-hero-copy">
+        <p class="eyebrow">Développeur iOS indépendant</p>
+        <h1>Des apps utiles.<br /><em>Vraiment agréables.</em></h1>
+        <p class="lede">Je suis Benjamin Bleriot. Je conçois des expériences natives, simples et soignées pour l’iPhone.</p>
+        <div class="hero-actions"><a class="button" href="#apps">Découvrir mes apps</a><a class="button button-secondary" href="#about">À propos de moi</a></div>
+        <p class="hero-note"><span></span> Développé en SwiftUI, en France</p>
+      </div>
+      <div class="app-orbit" aria-label="Mes quatre applications">
+        {apps.map((app, index) => <a class={`orbit-app orbit-${index + 1}`} href={`/apps/${app.data.slug}/`} aria-label={`Découvrir ${app.data.name}`}><img src={getAppIcon(app)} alt={`Icône de ${app.data.name}`} width="160" height="160" /><span>{app.data.name}</span></a>)}
+      </div>
     </div>
   </section>
 
   <section class="section apps-section" id="apps" aria-labelledby="apps-title">
     <div class="container">
-      <div class="section-heading split-heading"><div><p class="eyebrow">Selected work</p><h2 id="apps-title">Apps with a clear purpose.</h2></div><p>From game nights to personal expenses and running events, each app starts with one problem worth solving well.</p></div>
+      <div class="section-heading split-heading"><div><p class="eyebrow">Mes applications</p><h2 id="apps-title">Une idée claire.<br />Une app qui va droit au but.</h2></div><p>Jeux de société, budget personnel ou événements running : chaque projet part d’un besoin concret et cherche la solution la plus simple.</p></div>
       <div class="app-grid">{apps.map((app) => <AppCard app={app} />)}</div>
     </div>
   </section>
 
   <section class="section about-section" id="about" aria-labelledby="about-title">
     <div class="container about-grid">
-      <div><p class="eyebrow">About</p><h2 id="about-title">Native by design.</h2></div>
-      <div class="about-copy"><p class="large-copy">I’m an independent iOS developer building applications that feel at home on Apple platforms.</p><p>This portfolio brings together current app projects and their product information, release notes and policies. Product details are kept factual and expanded as each application develops.</p><a class="text-link" href="https://github.com/benjamin-bleriot" rel="me noreferrer">View my work on GitHub <span aria-hidden="true">↗</span></a></div>
+      <div><p class="eyebrow">À propos</p><h2 id="about-title">Natif par conviction.</h2></div>
+      <div class="about-copy"><p class="large-copy">Je développe des applications iOS indépendantes, pensées pour être immédiatement familières sur les plateformes Apple.</p><p>Ce portfolio rassemble mes projets actuels, leurs informations produit, leurs notes de version et leurs documents associés. Chaque détail est complété au fil du développement, sans promesse inventée.</p><a class="text-link" href="https://github.com/benjamin-bleriot" rel="me noreferrer">Voir mes projets sur GitHub <span aria-hidden="true">↗</span></a></div>
     </div>
   </section>
 
   <section class="section contact-section" id="contact" aria-labelledby="contact-title">
-    <div class="container contact-inner"><p class="eyebrow">Contact</p><h2 id="contact-title">Let’s build something considered.</h2><p>For questions about an app or development work, reach me through my public GitHub profile.</p><a class="button" href="https://github.com/benjamin-bleriot" rel="me noreferrer">Contact on GitHub <span aria-hidden="true">↗</span></a></div>
+    <div class="container contact-inner"><p class="eyebrow">Contact</p><h2 id="contact-title">Une question, une idée&nbsp;?</h2><p>Pour parler d’une application ou d’un projet de développement, contactez-moi via mon profil GitHub public.</p><a class="button" href="https://github.com/benjamin-bleriot" rel="me noreferrer">Me contacter sur GitHub <span aria-hidden="true">↗</span></a></div>
   </section>
 </BaseLayout>

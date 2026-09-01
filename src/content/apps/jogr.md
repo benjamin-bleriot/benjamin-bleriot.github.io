@@ -1,9 +1,9 @@
 ---
 name: "Jogr"
 slug: "jogr"
-description: "An iOS application centered on running events."
-shortDescription: "An iOS app for the world of running events."
-category: "Sports"
+description: "Une application iOS dédiée aux événements de course à pied."
+shortDescription: "L’application iOS pensée pour les événements running."
+category: "Sport"
 status: "in-development"
 featuredOrder: 4
 appStoreUrl: ""
@@ -11,48 +11,48 @@ appStoreId: ""
 icon: ""
 accent: "#8C6657"
 hero:
-  title: "Built around running events."
-  subtitle: "Jogr is an iOS application centered on running and race events."
+  title: "La course commence avant la ligne de départ."
+  subtitle: "Jogr est une application iOS dédiée aux événements running et aux courses."
 features:
-  - title: "Running events"
-    description: "An application experience focused on running and race events."
+  - title: "Événements running"
+    description: "Une expérience centrée sur la course à pied et ses événements."
 screenshots: []
 reviews: []
 faq:
-  - question: "What is Jogr?"
-    answer: "Jogr is an iOS application centered on running and race events."
-  - question: "Where can I download the app?"
-    answer: "An App Store link will appear on this page when it is available."
+  - question: "Qu’est-ce que Jogr ?"
+    answer: "Jogr est une application iOS dédiée aux événements de course à pied."
+  - question: "Où télécharger l’application ?"
+    answer: "Un lien App Store apparaîtra sur cette page dès que l’application sera disponible."
 technologies: []
 links: []
 privacy:
   lastUpdated: "2026-08-31"
   isPlaceholder: true
-  summary: "This draft reserves a privacy-policy page for Jogr. It must be completed after the app's data practices are confirmed."
+  summary: "Cette page provisoire réserve un espace à la politique de confidentialité de Jogr. Elle devra être complétée après vérification des pratiques de l’application."
   sections:
-    - heading: "Draft status"
-      content: "This page is a publishing placeholder, not a final or legally reviewed privacy policy."
-    - heading: "Information and permissions"
-      content: "No claim is made about location, health, event or account data. The final policy will describe only verified app behavior."
+    - heading: "Statut du document"
+      content: "Cette page est provisoire et ne constitue pas une politique de confidentialité définitive ou validée juridiquement."
+    - heading: "Informations et autorisations"
+      content: "Aucune affirmation n’est faite concernant des données de localisation, de santé, d’événement ou de compte. La politique définitive décrira uniquement le comportement vérifié de l’application."
     - heading: "Contact"
-      content: "Questions can be submitted through the developer's public GitHub profile linked in the site footer."
+      content: "Les questions peuvent être envoyées via le profil GitHub public du développeur, accessible en pied de page."
 terms:
   lastUpdated: "2026-08-31"
   isPlaceholder: true
-  summary: "These draft terms reserve a public URL for Jogr and require review before release."
+  summary: "Ces conditions provisoires réservent une adresse publique pour Jogr et devront être relues avant sa sortie."
   sections:
-    - heading: "Draft status"
-      content: "These terms are a placeholder and are not presented as legally validated terms of use."
-    - heading: "Using the app"
-      content: "The final terms, service scope and usage rules will be added when product details are confirmed."
-    - heading: "Changes"
-      content: "The publication date and details on this page will be updated when final terms are available."
+    - heading: "Statut du document"
+      content: "Ces conditions sont provisoires et ne sont pas présentées comme des conditions d’utilisation validées juridiquement."
+    - heading: "Utilisation de l’application"
+      content: "Les conditions définitives, le périmètre du service et les règles d’utilisation seront ajoutés lorsque les détails du produit seront confirmés."
+    - heading: "Modifications"
+      content: "La date de publication et le contenu seront actualisés lorsque les conditions définitives seront disponibles."
 changelog:
-  - version: "Unreleased"
-    label: "In development"
+  - version: "Non publiée"
+    label: "En développement"
     additions:
-      - "Public release notes will be published here when a version is available."
+      - "Les notes de version seront publiées ici dès qu’une version sera disponible."
     fixes: []
 ---
 
-Jogr is an iOS application centered on running and race events. This page intentionally keeps the product description broad until the app's exact feature set is confirmed.
+Jogr est une application iOS dédiée aux événements de course à pied. Cette page conserve volontairement une description générale jusqu’à ce que les fonctionnalités exactes soient confirmées.

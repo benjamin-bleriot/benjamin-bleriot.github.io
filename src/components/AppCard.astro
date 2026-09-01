@@ -7,7 +7,7 @@ import AppStoreButton from './AppStoreButton.astro';
 interface Props { app: CollectionEntry<'apps'> }
 const { app } = Astro.props;
 const icon = getAppIcon(app);
-const statusLabel = app.data.status === 'available' ? 'Available' : app.data.status === 'coming-soon' ? 'Coming soon' : 'In development';
+const statusLabel = app.data.status === 'available' ? 'Disponible' : app.data.status === 'coming-soon' ? 'Bientôt disponible' : 'En développement';
 ---
 
 <article class="app-card" style={`--app-accent: ${app.data.accent}`}>
@@ -21,7 +21,7 @@ const statusLabel = app.data.status === 'available' ? 'Available' : app.data.sta
     <p>{app.data.shortDescription}</p>
   </div>
   <div class="card-actions">
-    <a class="text-link" href={`/apps/${app.data.slug}/`}>Explore the app <span aria-hidden="true">→</span></a>
+    <a class="text-link" href={`/apps/${app.data.slug}/`}>Découvrir l’app <span aria-hidden="true">↗</span></a>
     {app.data.appStoreUrl && <AppStoreButton url={app.data.appStoreUrl} compact />}
   </div>
 </article>

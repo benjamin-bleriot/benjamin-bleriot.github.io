@@ -11,5 +11,5 @@ const initials = name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2);
 ---
 
 <div class:list={['app-icon', size]} style={`--app-accent: ${accent}`}>
-  {icon ? <img src={icon} alt={`${name} app icon`} width="128" height="128" loading={size === 'small' ? 'lazy' : 'eager'} /> : <span aria-hidden="true">{initials}</span>}
+  {icon ? <img src={icon} alt={`Icône de l’application ${name}`} width="128" height="128" loading={size === 'small' ? 'lazy' : 'eager'} /> : <span aria-hidden="true">{initials}</span>}
 </div>
