@@ -1,0 +1,1124 @@
+---
+import Base from '../layouts/Base.astro';
+import AppIcon from '../components/AppIcon.astro';
+import AppStoreBadge from '../components/AppStoreBadge.astro';
+import Faq from '../components/Faq.astro';
+import Gallery from '../components/Gallery.astro';
+import Icon from '../components/Icon.astro';
+import Stars from '../components/Stars.astro';
+import { visibleApps } from '../data/apps';
+import { buildPrivacy } from '../data/legal/privacy';
+import { site } from '../data/site';
+import type { AppData, Lang } from '../data/types';
+import { formatDate, formatNumber, formatRating, localizePath, useTranslations } from '../i18n';
+import { appStoreUrl, iconPng, iconUrl, languagesOf, pickShots, rating, screenshots, store } from '../lib/apps';
+
+interface Props {
+  app: AppData;
+  lang: Lang;
+}
+
+const { app, lang } = Astro.props;
+const t = useTranslations(lang);
+const live = app.status === 'live';
+const storeUrl = appStoreUrl(app);
+const data = store(app);
+const score = rating(app);
+const shots = screenshots(app, lang);
+const heroShots = pickShots(app, lang, app.shots?.hero);
+const languages = languagesOf(app);
+const privacy = buildPrivacy(app, lang);
+const path = `/${app.slug}/`;
+const link = (sub: string) => localizePath(`/${app.slug}/${sub}`, lang);
+const notes = data?.locales[lang];
+const others = visibleApps.filter((other) => other.slug !== app.slug);
+
+const schemaCategory: Record<string, string> = {
+  Games: 'GameApplication',
+  'Health & Fitness': 'HealthApplication',
+  Finance: 'FinanceApplication',
+  Education: 'EducationalApplication',
+};
+
+const siteUrl = Astro.site ?? new URL('https://benjamin-bleriot.github.io');
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  name: app.name,
+  description: app.lead[lang],
+  applicationCategory: schemaCategory[app.category.en] ?? 'MobileApplication',
+  operatingSystem: data ? `iOS ${data.minimumOsVersion}` : 'iOS',
+  image: new URL(iconPng(app), siteUrl).href,
+  url: new URL(localizePath(path, lang), siteUrl).href,
+  ...(storeUrl && { installUrl: storeUrl }),
+  author: { '@type': 'Person', name: site.author, url: siteUrl.href },
+  ...(live && { offers: { '@type': 'Offer', price: 0, priceCurrency: 'EUR' } }),
+  ...(score &&
+    score.count > 0 && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: Number(score.average.toFixed(2)),
+        ratingCount: score.count,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+};
+
+const supportItems = [
+  ...app.faq.map((item) => ({ q: item.q[lang], a: item.a[lang] })),
+];
+---
+
+<Base
+  lang={lang}
+  path={path}
+  title={`${app.name} — ${app.tagline[lang]}`}
+  description={app.lead[lang]}
+  image={iconPng(app)}
+  imageAlt={app.name}
+  largeImage={false}
+  app={app}
+  jsonLd={jsonLd}
+>
+  <!-- ─────────────────────────────── En-tête -->
+  <section class="hero">
+    <div class="aurora" aria-hidden="true">
+      <span style="background: var(--grad-a); top: -26vmax; left: -16vmax"></span>
+      <span style="background: var(--glow); top: -14vmax; right: -18vmax"></span>
+      <span style="background: var(--grad-b); top: 12vmax; left: 34%; opacity: 0.25"></span>
+    </div>
+
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <div class="identity">
+          <AppIcon app={app} size={84} eager />
+          <div>
+            <p class="app-name">{app.name}</p>
+            <p class="muted">{app.category[lang]}{live && ` · ${t('app.free')}`}</p>
+          </div>
+        </div>
+
+        <h1 class="title-xl" set:html={app.headline[lang]} />
+        <p class="lead">{app.lead[lang]}</p>
+
+        <ul class="highlights" role="list">
+          {
+            app.highlights.map((item) => (
+              <li class="chip">
+                <Icon name={item.icon} size={17} />
+                {item.label[lang]}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="get">
+          {
+            live && storeUrl ? (
+              <>
+                <AppStoreBadge href={storeUrl} lang={lang} height={54} />
+                {score && score.count > 0 && (
+                  <div class="rating">
+                    <Stars value={score.average} lang={lang} size={17} />
+                    <p>
+                      <strong>{formatRating(score.average, lang)}</strong>
+                      <span class="muted"> · {t('app.ratings', { n: formatNumber(score.count, lang) })}</span>
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p class="soon-badge">
+                <Icon name="sparkles" size={18} />
+                {t('app.soon.appstore')}
+              </p>
+            )
+          }
+        </div>
+
+        <p class="facts">
+          <span><Icon name="device" size={16} />{t('app.iphone')}</span>
+          <span>{app.requirements[lang]}</span>
+          {languages.length > 1 && <span>{t('app.languages', { n: languages.length })}</span>}
+          {live && app.pricing && <span>{t('app.iap')}</span>}
+        </p>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        {
+          heroShots.length === 3 ? (
+            <div class="fan">
+              <img class="shot shot-left" src={heroShots[0]} alt="" width="600" height="1304" />
+              <img class="shot shot-right" src={heroShots[2]} alt="" width="600" height="1304" />
+              <img class="shot shot-center" src={heroShots[1]} alt="" width="600" height="1304" fetchpriority="high" />
+            </div>
+          ) : (
+            <div class="icon-stage">
+              <span class="halo" />
+              <img class="app-icon big-icon" src={iconUrl(app)} alt="" width="220" height="220" />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Fonctionnalités -->
+  <section class="section" id="features">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{t('app.features.eyebrow')}</p>
+        <h2 class="title-l">{t('app.features.title')}</h2>
+      </header>
+      <ul class:list={['features', { quad: app.features.length % 4 === 0 }]} role="list">
+        {
+          app.features.map((feature) => (
+            <li class="card feature reveal">
+              <span class="feature-icon">
+                <Icon name={feature.icon} size={24} />
+              </span>
+              <h3>{feature.title[lang]}</h3>
+              <p>{feature.text[lang]}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Étapes -->
+  {
+    app.steps && (
+      <section class="section steps-section">
+        <div class="container">
+          <header class="section-head center">
+            <p class="eyebrow">{t('app.steps.eyebrow')}</p>
+            <h2 class="title-l">{t('app.steps.title')}</h2>
+          </header>
+          <ol class="steps" role="list">
+            {app.steps.map((step, index) => (
+              <li class="step reveal">
+                <span class="step-number">{index + 1}</span>
+                <h3>{step.title[lang]}</h3>
+                <p>{step.text[lang]}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ─────────────────────────────── Captures -->
+  {
+    shots.length > 0 && (
+      <section class="section gallery-section" id="preview">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">{t('app.gallery.eyebrow')}</p>
+            <h2 class="title-l">{t('app.gallery.title')}</h2>
+          </header>
+        </div>
+        <Gallery shots={shots} name={app.name} lang={lang} />
+      </section>
+    )
+  }
+
+  <!-- ─────────────────────────────── Avis -->
+  {
+    app.reviews.length > 0 && score && (
+      <section class="section" id="reviews">
+        <div class="container">
+          <div class="reviews-head">
+            <header class="section-head">
+              <p class="eyebrow">{t('app.reviews.eyebrow')}</p>
+              <h2 class="title-l">{t('app.reviews.title', { rating: formatRating(score.average, lang) })}</h2>
+              <p class="lead">{t('app.reviews.lead')}</p>
+            </header>
+            <div class="score-card card">
+              <p class="score-value">{formatRating(score.average, lang)}</p>
+              <Stars value={score.average} lang={lang} size={20} />
+              <p class="muted">{t('app.ratings', { n: formatNumber(score.count, lang) })}</p>
+            </div>
+          </div>
+          <ul class="reviews" role="list">
+            {app.reviews.map((review) => (
+              <li class="card review reveal">
+                <Stars value={review.rating} lang={lang} size={15} />
+                <h3>{review.title[lang]}</h3>
+                <blockquote lang={review.original === lang ? undefined : lang}>
+                  <p>{lang === 'fr' ? `« ${review.text[lang]} »` : `“${review.text[lang]}”`}</p>
+                </blockquote>
+                <p class="review-author">
+                  {review.author}
+                  {review.original !== lang && <span> · {t('app.reviews.translated')}</span>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ─────────────────────────────── Tarifs -->
+  {
+    app.pricing && (
+      <section class="section">
+        <div class="container">
+          <header class="section-head center">
+            <p class="eyebrow">{t('app.pricing.eyebrow')}</p>
+            <h2 class="title-l">{t('app.pricing.title')}</h2>
+          </header>
+          <div class="pricing">
+            <div class="card plan reveal">
+              <p class="plan-label">{t('app.pricing.free')}</p>
+              <p class="plan-name">{app.name}</p>
+              <ul role="list">
+                {app.pricing.free.map((item) => (
+                  <li>
+                    <Icon name="check" size={18} />
+                    {item[lang]}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div class="card plan premium reveal">
+              <p class="plan-label">
+                {app.pricing.model === 'lifetime' ? t('app.pricing.lifetime') : t('app.pricing.subscription')}
+              </p>
+              <p class="plan-name">{app.pricing.premiumName[lang]}</p>
+              <ul role="list">
+                {app.pricing.premium.map((item) => (
+                  <li>
+                    <Icon name="check" size={18} />
+                    {item[lang]}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <p class="pricing-note muted">{t('app.pricing.note')}</p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ─────────────────────────────── Vie privée + nouveautés -->
+  <section class="section">
+    <div class="container info-grid">
+      <article class="card privacy-card reveal">
+        <span class="privacy-icon"><Icon name="shield" size={30} /></span>
+        <p class="eyebrow">{t('app.privacy.eyebrow')}</p>
+        <h2 class="title-m">{live ? t('app.privacy.title') : t('app.privacy.titleSoon')}</h2>
+        {live && <p class="label-note muted">{t('app.privacy.label')}</p>}
+        <p class="privacy-summary">{privacy.summary}</p>
+        <ul class="glance" role="list">
+          {
+            privacy.glance.map((item) => (
+              <li class="chip">
+                <Icon name={item.icon} size={16} />
+                {item.label}
+              </li>
+            ))
+          }
+        </ul>
+        <a class="text-link" href={link('privacy/')}>
+          {t('app.privacy.read')}
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </article>
+
+      {
+        live && notes && (
+          <article class="card notes-card reveal">
+            <p class="eyebrow">{t('app.whatsnew.eyebrow')}</p>
+            <h2 class="title-m">{t('app.whatsnew.title', { v: notes.version })}</h2>
+            <p class="muted">{formatDate(notes.currentVersionReleaseDate, lang)}</p>
+            <p class="release-notes">{notes.releaseNotes}</p>
+            {storeUrl && (
+              <a class="text-link" href={storeUrl} target="_blank" rel="noopener">
+                {t('app.links.appstore')}
+                <Icon name="arrow-up-right" size={16} />
+              </a>
+            )}
+          </article>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── FAQ -->
+  <section class="section" id="faq">
+    <div class="container-narrow">
+      <header class="section-head center">
+        <p class="eyebrow">{t('app.faq.eyebrow')}</p>
+        <h2 class="title-l">{t('app.faq.title')}</h2>
+      </header>
+      <Faq items={supportItems} />
+      <p class="faq-more">
+        <a class="text-link" href={link('support/')}>
+          {t('app.faq.more')}
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Appel à l'action -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-card grain reveal">
+        <AppIcon app={app} size={96} />
+        <h2 class="title-l">{live ? t('app.cta.title', { app: app.name }) : t('app.cta.soonTitle')}</h2>
+        <p class="lead">{live ? t('app.cta.lead') : t('app.cta.soonLead')}</p>
+        {
+          live && storeUrl ? (
+            <AppStoreBadge href={storeUrl} lang={lang} height={56} />
+          ) : (
+            <a class="btn cta-mail" href={`mailto:${app.contactEmail}?subject=${encodeURIComponent(`[${app.name}] ${t('app.cta.notify')}`)}`}>
+              <Icon name="bell" size={18} />
+              {t('app.cta.notify')}
+            </a>
+          )
+        }
+        <nav class="doc-links" aria-label={t('support.docs')}>
+          <a href={link('privacy/')}>{t('app.links.privacy')}</a>
+          <a href={link('terms/')}>{t('app.links.terms')}</a>
+          <a href={link('support/')}>{t('app.links.support')}</a>
+        </nav>
+      </div>
+      {app.trademark && <p class="trademark muted">{app.trademark[lang]}</p>}
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Autres apps -->
+  <section class="section others-section">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{t('app.other.eyebrow')}</p>
+        <h2 class="title-m">{t('app.other.title')}</h2>
+      </header>
+      <ul class="others" role="list">
+        {
+          others.map((other) => (
+            <li>
+              <a class="card other" href={localizePath(`/${other.slug}/`, lang)}>
+                <AppIcon app={other} size={56} />
+                <span>
+                  <strong>{other.name}</strong>
+                  <span class="muted">{other.tagline[lang]}</span>
+                </span>
+                <Icon name="chevron-right" size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* En-tête */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    margin-top: calc(-1 * (var(--nav-h) + 12px));
+    padding-top: calc(var(--nav-h) + clamp(40px, 7vw, 88px));
+    padding-bottom: clamp(24px, 5vw, 64px);
+    overflow: hidden;
+  }
+
+  .hero .aurora span {
+    opacity: calc(var(--aurora-opacity) * 1.05);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 35%;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    z-index: -1;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 72px);
+  }
+
+  .hero-text {
+    display: grid;
+    justify-items: start;
+    gap: 24px;
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .app-name {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 5.6vw, 4.6rem);
+  }
+
+  .highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .get {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 22px;
+    margin-top: 4px;
+  }
+
+  .rating {
+    display: grid;
+    gap: 2px;
+    font-size: 15px;
+  }
+
+  .rating strong {
+    font-size: 17px;
+  }
+
+  .soon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    border: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .soon-badge :global(.icon) {
+    color: var(--accent);
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 14px;
+    color: var(--text-3);
+  }
+
+  .facts span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .facts span + span::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    margin-right: 12px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .hero-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 560px;
+  }
+
+  .fan {
+    position: relative;
+    width: min(100%, 520px);
+    height: 600px;
+  }
+
+  .shot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    border-radius: 30px;
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 40px 80px -30px rgb(0 0 0 / 0.55);
+  }
+
+  .shot-center {
+    z-index: 2;
+    width: 270px;
+    transform: translate(-50%, -50%);
+  }
+
+  .shot-left {
+    transform: translate(-100%, -46%) rotate(-9deg) scale(0.9);
+    opacity: 0.92;
+  }
+
+  .shot-right {
+    transform: translate(0%, -46%) rotate(9deg) scale(0.9);
+    opacity: 0.92;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .shot-center {
+      animation: float 7s ease-in-out infinite;
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translate(-50%, calc(-50% - 10px));
+    }
+  }
+
+  .icon-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 420px;
+  }
+
+  .halo {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--glow) 55%, transparent), transparent 65%);
+    filter: blur(30px);
+  }
+
+  .big-icon {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.15),
+      0 50px 90px -30px rgb(0 0 0 / 0.6);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .big-icon {
+      animation: bob 6s ease-in-out infinite;
+    }
+  }
+
+  @keyframes bob {
+    50% {
+      transform: translateY(-12px) rotate(-2deg);
+    }
+  }
+
+  @media (max-width: 920px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-art {
+      min-height: 0;
+    }
+
+    .fan {
+      height: 470px;
+    }
+
+    .shot {
+      width: 200px;
+      border-radius: 24px;
+    }
+
+    .shot-center {
+      width: 214px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .fan {
+      height: 400px;
+    }
+
+    .shot {
+      width: 164px;
+      border-radius: 20px;
+    }
+
+    .shot-center {
+      width: 180px;
+    }
+  }
+
+  /* Fonctionnalités */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .features.quad {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (max-width: 1020px) {
+    .features,
+    .features.quad {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .features,
+    .features.quad {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .feature {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 28px 26px;
+    transition:
+      transform 0.4s var(--ease),
+      border-color 0.4s;
+  }
+
+  .feature:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  }
+
+  .feature-icon {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, var(--grad-a), var(--grad-b));
+    color: #fff;
+    box-shadow: 0 10px 24px -12px var(--grad-b);
+  }
+
+  .feature h3 {
+    font-size: 20px;
+  }
+
+  .feature p {
+    color: var(--text-2);
+    font-size: 16px;
+  }
+
+  /* Étapes */
+  .steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    counter-reset: step;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 16%;
+    right: 16%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 50%, transparent), transparent);
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 0 0 8px var(--bg);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+  }
+
+  .step h3 {
+    font-size: 22px;
+  }
+
+  .step p {
+    max-width: 260px;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 720px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+
+    .steps::before {
+      display: none;
+    }
+  }
+
+  /* Captures */
+  .gallery-section .section-head {
+    margin-bottom: 20px;
+  }
+
+  /* Avis */
+  .reviews-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(36px, 5vw, 56px);
+  }
+
+  .reviews-head .section-head {
+    margin-bottom: 0;
+  }
+
+  .score-card {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 22px 32px;
+    border-radius: var(--radius-m);
+  }
+
+  .score-value {
+    font-family: var(--font-display);
+    font-size: 54px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 16px;
+  }
+
+  .review {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+  }
+
+  .review h3 {
+    font-size: 19px;
+  }
+
+  blockquote {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .review-author {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .review-author span {
+    font-weight: 400;
+    color: var(--text-3);
+  }
+
+  /* Tarifs */
+  .pricing {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 380px));
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .plan {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding: 32px;
+  }
+
+  .plan-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .plan-name {
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .plan ul {
+    display: grid;
+    gap: 12px;
+  }
+
+  .plan li {
+    display: flex;
+    gap: 10px;
+    color: var(--text-2);
+  }
+
+  .plan li :global(.icon) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--accent);
+  }
+
+  .premium {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    background:
+      radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+      var(--card);
+    box-shadow: 0 30px 70px -40px color-mix(in srgb, var(--accent) 90%, transparent);
+  }
+
+  .premium .plan-label {
+    color: var(--accent);
+  }
+
+  .pricing-note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  @media (max-width: 720px) {
+    .pricing {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Vie privée + nouveautés */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 18px;
+  }
+
+  .privacy-card,
+  .notes-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: clamp(28px, 4vw, 40px);
+  }
+
+  .privacy-icon {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 6px;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+  }
+
+  .label-note {
+    margin-top: -6px;
+    font-size: 14px;
+  }
+
+  .privacy-summary {
+    color: var(--text-2);
+  }
+
+  .glance {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .glance :global(.icon) {
+    color: var(--success);
+  }
+
+  .release-notes {
+    white-space: pre-line;
+    color: var(--text-2);
+  }
+
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 10px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .text-link :global(.icon) {
+    transition: transform 0.25s var(--ease);
+  }
+
+  .text-link:hover :global(.icon) {
+    transform: translateX(3px);
+  }
+
+  /* FAQ */
+  .faq-more {
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  /* Appel à l'action */
+  .cta-card {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    padding: clamp(48px, 8vw, 88px) 24px;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(70% 90% at 50% 0%, color-mix(in srgb, var(--grad-a) 80%, #fff 20%), transparent 60%),
+      radial-gradient(60% 70% at 100% 100%, color-mix(in srgb, var(--glow) 55%, transparent), transparent 70%),
+      linear-gradient(160deg, var(--grad-a), var(--grad-b));
+    color: #fff;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cta-card .lead {
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .cta-card :global(.app-icon) {
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.25),
+      0 24px 50px -20px rgb(0 0 0 / 0.6);
+  }
+
+  .cta-mail {
+    background: #fff;
+    color: #111;
+  }
+
+  .doc-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 22px;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .doc-links a {
+    color: rgb(255 255 255 / 0.85);
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.35);
+    text-underline-offset: 4px;
+  }
+
+  .doc-links a:hover {
+    color: #fff;
+    text-decoration-color: #fff;
+  }
+
+  .trademark {
+    max-width: 720px;
+    margin: 20px auto 0;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  /* Autres apps */
+  .others-section {
+    padding-top: 0;
+  }
+
+  .others {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 14px;
+  }
+
+  .other {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px 14px 14px;
+    border-radius: var(--radius-m);
+    transition:
+      transform 0.3s var(--ease),
+      border-color 0.3s;
+  }
+
+  .other:hover {
+    transform: translateY(-3px);
+    border-color: var(--line-strong);
+  }
+
+  .other > span {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.3;
+  }
+
+  .other strong {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .other .muted {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .other > :global(.icon) {
+    color: var(--text-3);
+  }
+</style>

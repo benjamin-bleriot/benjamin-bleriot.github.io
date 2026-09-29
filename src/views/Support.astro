@@ -1,0 +1,298 @@
+---
+import Base from '../layouts/Base.astro';
+import AppIcon from '../components/AppIcon.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import type { AppData, Lang } from '../data/types';
+import { localizePath, useTranslations } from '../i18n';
+import { appStoreUrl, iconPng, reviewUrl } from '../lib/apps';
+
+interface Props {
+  app: AppData;
+  lang: Lang;
+}
+
+const { app, lang } = Astro.props;
+const t = useTranslations(lang);
+const link = (sub: string) => localizePath(`/${app.slug}/${sub}`, lang);
+const live = app.status === 'live';
+const purchases = app.terms.purchases;
+const icloud = app.privacy.practices.includes('icloud-sync');
+const subject = encodeURIComponent(t('support.subject', { app: app.name }));
+const mailto = `mailto:${app.contactEmail}?subject=${subject}`;
+const storeUrl = appStoreUrl(app);
+const writeReview = reviewUrl(app);
+
+const items = [
+  ...(app.supportFaq ?? []).map((item) => ({ q: item.q[lang], a: item.a[lang] })),
+  ...(purchases !== 'none' && live ? [{ q: t('support.restore.q'), a: t('support.restore.a') }] : []),
+  ...(purchases === 'subscription' ? [{ q: t('support.subscription.q'), a: t('support.subscription.a') }] : []),
+  ...(purchases !== 'none' && live ? [{ q: t('support.refund.q'), a: t('support.refund.a') }] : []),
+  { q: t('support.newphone.q'), a: t('support.newphone.a') + (icloud ? t('support.newphone.icloud') : '') },
+  { q: t('support.delete.q'), a: t('support.delete.a') },
+  ...app.faq.map((item) => ({ q: item.q[lang], a: item.a[lang] })),
+  { q: t('support.idea.q'), a: t('support.idea.a') },
+];
+---
+
+<Base
+  lang={lang}
+  path={`/${app.slug}/support/`}
+  title={`${t('support.title')} — ${app.name}`}
+  description={t('support.lead')}
+  image={iconPng(app)}
+  imageAlt={app.name}
+  largeImage={false}
+  app={app}
+>
+  <section class="support-hero">
+    <div class="aurora" aria-hidden="true">
+      <span style="background: var(--grad-a); top: -30vmax; left: -10vmax"></span>
+      <span style="background: var(--glow); top: -30vmax; right: -16vmax"></span>
+    </div>
+    <div class="container-narrow hero-inner">
+      <a class="back" href={link('')}>
+        <Icon name="arrow-left" size={16} />
+        {t('doc.back', { app: app.name })}
+      </a>
+      <div class="identity">
+        <AppIcon app={app} size={56} eager />
+        <p class="eyebrow">{app.name}</p>
+      </div>
+      <h1 class="title-l">{t('support.title')}</h1>
+      <p class="lead">{t('support.lead')}</p>
+
+      <div class="contact card">
+        <div class="contact-main">
+          <span class="contact-icon"><Icon name="mail" size={26} /></span>
+          <div>
+            <a class="btn btn-accent" href={mailto}>
+              {t('support.email')}
+              <Icon name="arrow-right" size={17} class="icon-arrow" />
+            </a>
+            <p class="address">{app.contactEmail}</p>
+          </div>
+        </div>
+        <div class="tips">
+          <p>{t('support.tips.title')}</p>
+          <ul>
+            <li>{t('support.tips.1')}</li>
+            <li>{t('support.tips.2')}</li>
+            <li>{t('support.tips.3')}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq-section">
+    <div class="container-narrow">
+      <header class="section-head">
+        <p class="eyebrow">{t('app.faq.eyebrow')}</p>
+        <h2 class="title-m">{t('support.faq.title')}</h2>
+      </header>
+      <Faq items={items} />
+
+      {
+        live && writeReview && (
+          <div class="rate card">
+            <p>
+              <Icon name="star" size={20} />
+              {t('support.rate', { app: app.name })}
+            </p>
+            <a class="btn btn-ghost btn-sm" href={writeReview} target="_blank" rel="noopener">
+              {t('support.rateCta')}
+              <Icon name="arrow-up-right" size={15} />
+            </a>
+          </div>
+        )
+      }
+
+      <nav class="docs" aria-label={t('support.docs')}>
+        <a class="card doc-link" href={link('privacy/')}>
+          <Icon name="shield" size={20} />
+          <span>{t('doc.privacy')}</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a class="card doc-link" href={link('terms/')}>
+          <Icon name="book" size={20} />
+          <span>{t('doc.terms')}</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+        {
+          storeUrl && (
+            <a class="card doc-link" href={storeUrl} target="_blank" rel="noopener">
+              <Icon name="apple" size={20} />
+              <span>{t('app.links.appstore')}</span>
+              <Icon name="arrow-up-right" size={16} />
+            </a>
+          )
+        }
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .support-hero {
+    position: relative;
+    isolation: isolate;
+    margin-top: calc(-1 * (var(--nav-h) + 12px));
+    padding-top: calc(var(--nav-h) + clamp(40px, 7vw, 80px));
+    overflow: hidden;
+  }
+
+  .support-hero .aurora span {
+    opacity: calc(var(--aurora-opacity) * 0.7);
+  }
+
+  .hero-inner {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .contact {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 28px;
+    border-radius: var(--radius-l);
+  }
+
+  .contact-main {
+    display: flex;
+    gap: 18px;
+  }
+
+  .contact-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, var(--grad-a), var(--grad-b));
+    color: #fff;
+  }
+
+  .address {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-3);
+    user-select: all;
+  }
+
+  .tips {
+    padding-left: 28px;
+    border-left: 1px solid var(--line);
+    font-size: 15px;
+    color: var(--text-2);
+  }
+
+  .tips p {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tips ul {
+    margin: 8px 0 0;
+    padding-left: 1.1em;
+  }
+
+  .tips li + li {
+    margin-top: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+
+    .tips {
+      padding-left: 0;
+      padding-top: 22px;
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  .rate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 28px;
+    padding: 20px 22px;
+    border-radius: var(--radius-m);
+  }
+
+  .rate p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+  }
+
+  .rate p :global(.icon) {
+    flex: none;
+    color: var(--star);
+    fill: currentColor;
+  }
+
+  .docs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: var(--radius-m);
+    font-weight: 600;
+    transition:
+      transform 0.25s var(--ease),
+      border-color 0.25s;
+  }
+
+  .doc-link span {
+    flex: 1;
+  }
+
+  .doc-link > :global(.icon:first-child) {
+    color: var(--accent);
+  }
+
+  .doc-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+  }
+</style>

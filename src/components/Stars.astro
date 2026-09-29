@@ -1,0 +1,60 @@
+---
+import type { Lang } from '../data/types';
+import { formatRating } from '../i18n';
+
+interface Props {
+  value: number;
+  lang: Lang;
+  size?: number;
+}
+
+const { value, lang, size = 16 } = Astro.props;
+const percent = Math.max(0, Math.min(100, (value / 5) * 100));
+const label = lang === 'fr' ? `${formatRating(value, lang)} étoiles sur 5` : `${formatRating(value, lang)} out of 5 stars`;
+const star = 'M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z';
+const five = [0, 1, 2, 3, 4];
+---
+
+<span class="stars" role="img" aria-label={label} style={`--size:${size}px`}>
+  <span class="row base" aria-hidden="true">
+    {five.map(() => <svg viewBox="0 0 24 24" width={size} height={size}><path d={star} /></svg>)}
+  </span>
+  <span class="row fill" style={`width:${percent}%`} aria-hidden="true">
+    {five.map(() => <svg viewBox="0 0 24 24" width={size} height={size}><path d={star} /></svg>)}
+  </span>
+</span>
+
+<style>
+  .stars {
+    position: relative;
+    display: inline-flex;
+    width: fit-content;
+    align-self: flex-start;
+    justify-self: start;
+    vertical-align: middle;
+  }
+
+  .row {
+    display: inline-flex;
+    gap: 2px;
+    white-space: nowrap;
+  }
+
+  .row svg {
+    flex: none;
+  }
+
+  .base svg {
+    fill: color-mix(in srgb, var(--text-3) 35%, transparent);
+  }
+
+  .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    overflow: hidden;
+  }
+
+  .fill svg {
+    fill: var(--star);
+  }
+</style>

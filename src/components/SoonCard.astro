@@ -1,0 +1,191 @@
+---
+import AppIcon from './AppIcon.astro';
+import Icon from './Icon.astro';
+import type { AppData, Lang } from '../data/types';
+import { localizePath, useTranslations } from '../i18n';
+import { themeStyle } from '../lib/apps';
+
+interface Props {
+  app: AppData;
+  lang: Lang;
+}
+
+const { app, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<a class="soon-card grain reveal" href={localizePath(`/${app.slug}/`, lang)} style={themeStyle(app)}>
+  <div class="sky" aria-hidden="true">
+    {Array.from({ length: 18 }, (_, i) => <i style={`--i:${i};left:${(i * 37) % 100}%;top:${(i * 53 + 11) % 100}%`} />)}
+  </div>
+  <div class="text">
+    <p class="badge"><Icon name="sparkles" size={15} /> {t('home.soon')}</p>
+    <h3 set:html={app.headline[lang]} />
+    <p class="tagline">
+      <strong>{app.name}</strong> — {app.tagline[lang]}
+    </p>
+    <span class="go">
+      {t('home.discover')}
+      <Icon name="arrow-right" size={17} />
+    </span>
+  </div>
+  <div class="art">
+    <span class="halo" aria-hidden="true"></span>
+    <AppIcon app={app} size={168} />
+  </div>
+</a>
+
+<style>
+  .soon-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    gap: 24px;
+    margin-top: 22px;
+    min-height: 340px;
+    padding: clamp(28px, 5vw, 52px);
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: var(--radius-xl);
+    color: #fff;
+    background:
+      radial-gradient(60% 90% at 78% 50%, color-mix(in srgb, var(--glow) 45%, transparent), transparent 60%),
+      radial-gradient(80% 80% at 0% 0%, color-mix(in srgb, var(--grad-a) 90%, #fff 10%), transparent 60%),
+      linear-gradient(135deg, var(--grad-a), var(--grad-b) 70%);
+    box-shadow: var(--shadow-md);
+    transition:
+      transform 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+
+  .soon-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sky {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .sky i {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.55;
+    box-shadow: 0 0 8px #fff;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sky i {
+      animation: twinkle 3.2s ease-in-out infinite;
+      animation-delay: calc(var(--i) * -0.37s);
+    }
+  }
+
+  @keyframes twinkle {
+    50% {
+      opacity: 0.12;
+      transform: scale(0.6);
+    }
+  }
+
+  .text {
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    border: 1px solid rgb(255 255 255 / 0.24);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--glow);
+  }
+
+  h3 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .tagline {
+    font-size: 17px;
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    margin-top: 6px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #fff;
+    color: #111;
+    font-weight: 700;
+  }
+
+  .art {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+
+  .halo {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--glow) 70%, transparent), transparent 65%);
+    filter: blur(20px);
+  }
+
+  .art :global(.app-icon) {
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.2),
+      0 30px 60px -20px rgb(0 0 0 / 0.6);
+    transition: transform 0.6s var(--ease);
+  }
+
+  .soon-card:hover .art :global(.app-icon) {
+    transform: rotate(-4deg) scale(1.04);
+  }
+
+  @media (max-width: 720px) {
+    .soon-card {
+      grid-template-columns: 1fr;
+    }
+
+    .art {
+      order: -1;
+      justify-items: start;
+    }
+
+    .art :global(.app-icon) {
+      width: 112px !important;
+      height: 112px !important;
+    }
+
+    .halo {
+      width: 180px;
+      height: 180px;
+      left: -30px;
+    }
+  }
+</style>

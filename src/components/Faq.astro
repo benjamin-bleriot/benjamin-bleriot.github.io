@@ -1,0 +1,84 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  items: { q: string; a: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item, index) => (
+      <details name="faq" open={index === 0}>
+        <summary>
+          <span>{item.q}</span>
+          <span class="toggle" aria-hidden="true">
+            <Icon name="plus" size={18} />
+          </span>
+        </summary>
+        <div class="answer prose">
+          <p set:html={item.a} />
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    display: grid;
+    gap: 12px;
+  }
+
+  details {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--card);
+    transition:
+      border-color 0.25s,
+      background-color 0.25s;
+  }
+
+  details[open] {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toggle {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    transition: transform 0.35s var(--ease);
+  }
+
+  details[open] .toggle {
+    transform: rotate(45deg);
+  }
+
+  .answer {
+    padding: 0 22px 22px;
+  }
+</style>

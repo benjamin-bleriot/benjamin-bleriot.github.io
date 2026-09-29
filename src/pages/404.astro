@@ -1,7 +1,95 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import Base from '../layouts/Base.astro';
+import AppIcon from '../components/AppIcon.astro';
+import { visibleApps } from '../data/apps';
+import { useTranslations } from '../i18n';
+
+// GitHub Pages sert cette page pour toute adresse inconnue : elle est bilingue.
+const fr = useTranslations('fr');
+const en = useTranslations('en');
 ---
 
-<BaseLayout title="Page introuvable — Benjamin Bleriot" description="La page demandée est introuvable." canonicalPath="/404/">
-  <section class="section error-page"><div class="container narrow"><p class="eyebrow">404</p><h1>Cette page s’est égarée.</h1><p class="lede">L’adresse a peut-être changé ou la page n’existe plus.</p><a class="button" href="/">Retour à l’accueil</a></div></section>
-</BaseLayout>
+<Base lang="fr" path="/" title={`${fr('notfound.title')} · ${en('notfound.title')}`} description={fr('notfound.text')} noindex>
+  <section class="not-found">
+    <div class="aurora" aria-hidden="true">
+      <span style="background: var(--aurora-1); top: -30vmax; left: -10vmax"></span>
+      <span style="background: var(--aurora-2); top: -24vmax; right: -14vmax"></span>
+    </div>
+    <div class="container-narrow inner">
+      <p class="code gradient-text">404</p>
+      <h1 class="title-l">{fr('notfound.title')}</h1>
+      <p class="lead">{fr('notfound.text')}</p>
+      <p class="lead en" lang="en">{en('notfound.title')} — {en('notfound.text')}</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/">{fr('notfound.home')}</a>
+        <a class="btn btn-ghost" href="/en/" lang="en">{en('notfound.home')}</a>
+      </div>
+      <ul class="apps" role="list">
+        {
+          visibleApps.map((app) => (
+            <li>
+              <a href={`/${app.slug}/`} aria-label={app.name}>
+                <AppIcon app={app} size={56} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    position: relative;
+    isolation: isolate;
+    margin-top: calc(-1 * (var(--nav-h) + 12px));
+    padding: calc(var(--nav-h) + clamp(56px, 10vw, 120px)) 0 clamp(64px, 10vw, 120px);
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .inner {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+  }
+
+  .code {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 22vw, 11rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+  }
+
+  .en {
+    font-size: 16px;
+    color: var(--text-3);
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .apps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .apps a {
+    display: block;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .apps a:hover {
+    transform: translateY(-4px) scale(1.06);
+  }
+</style>

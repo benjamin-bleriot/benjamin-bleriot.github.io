@@ -1,0 +1,147 @@
+---
+import Base from '../layouts/Base.astro';
+import AppIcon from '../components/AppIcon.astro';
+import { visibleApps } from '../data/apps';
+import { site } from '../data/site';
+import type { Lang } from '../data/types';
+import { localizePath, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const link = (slug: string, sub = '') => localizePath(`/${slug}/${sub}`, lang);
+
+const sections = [
+  {
+    title: t('legal.publisher'),
+    html: `<p>${t('legal.publisherText', { author: site.author })}</p><p>Contact : <a href="mailto:${site.email}">${site.email}</a></p>`,
+  },
+  {
+    title: t('legal.host'),
+    html: `<p>GitHub, Inc. (GitHub Pages)<br />88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, ${lang === 'fr' ? 'États-Unis' : 'United States'}<br /><a href="https://github.com" target="_blank" rel="noopener">github.com</a></p>`,
+  },
+  { title: t('legal.privacy'), html: `<p>${t('legal.privacyText')}</p>` },
+  { title: t('legal.ip'), html: `<p>${t('legal.ipText', { author: site.author })}</p>` },
+];
+---
+
+<Base lang={lang} path="/legal/" title={`${t('legal.title')} — ${site.author}`} description={t('legal.description')}>
+  <section class="legal-hero">
+    <div class="container-narrow">
+      <p class="eyebrow">{site.author}</p>
+      <h1 class="title-l">{t('legal.title')}</h1>
+    </div>
+  </section>
+
+  <div class="container-narrow legal">
+    {
+      sections.map((section) => (
+        <section class="block">
+          <h2>{section.title}</h2>
+          <div class="prose" set:html={section.html} />
+        </section>
+      ))
+    }
+
+    <section class="block">
+      <h2>{t('legal.apps')}</h2>
+      <ul class="apps" role="list">
+        {
+          visibleApps.map((app) => (
+            <li class="card app-row">
+              <AppIcon app={app} size={48} />
+              <strong>{app.name}</strong>
+              <nav aria-label={app.name}>
+                <a href={link(app.slug, 'privacy/')}>{t('app.links.privacy')}</a>
+                <a href={link(app.slug, 'terms/')}>{t('app.links.terms')}</a>
+                <a href={link(app.slug, 'support/')}>{t('app.links.support')}</a>
+              </nav>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .legal-hero {
+    padding-top: clamp(48px, 8vw, 96px);
+    padding-bottom: 24px;
+  }
+
+  .legal-hero .container-narrow {
+    display: grid;
+    gap: 14px;
+  }
+
+  .legal {
+    padding-bottom: clamp(64px, 8vw, 104px);
+  }
+
+  .block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .block:last-child {
+    border-bottom: 0;
+  }
+
+  h2 {
+    margin-bottom: 12px;
+    font-size: 22px;
+  }
+
+  .apps {
+    display: grid;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .app-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px 14px 14px;
+    border-radius: var(--radius-m);
+    --accent: var(--text);
+  }
+
+  .app-row strong {
+    font-family: var(--font-display);
+    font-size: 18px;
+  }
+
+  .app-row nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 14px;
+  }
+
+  .app-row nav a {
+    color: var(--text-2);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 4px;
+  }
+
+  .app-row nav a:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 620px) {
+    .app-row {
+      grid-template-columns: auto 1fr;
+    }
+
+    .app-row nav {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+import LegalDoc from '../../views/LegalDoc.astro';
+import { visibleApps } from '../../data/apps';
+import type { AppData } from '../../data/types';
+
+export function getStaticPaths() {
+  return visibleApps.map((app) => ({ params: { app: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppData;
+}
+
+const { app } = Astro.props;
+---
+
+<LegalDoc app={app} lang="fr" kind="terms" />

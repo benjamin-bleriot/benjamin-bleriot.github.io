@@ -1,0 +1,47 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  size?: number;
+}
+
+const { size = 34 } = Astro.props;
+---
+
+{
+  site.avatar ? (
+    <img class="brand-mark photo" src={site.avatar} alt="" width={size} height={size} style={`--size:${size}px`} />
+  ) : (
+    <span class="brand-mark" style={`--size:${size}px`} aria-hidden="true">
+      {site.initials}
+    </span>
+  )
+}
+
+<style>
+  .brand-mark {
+    display: inline-grid;
+    place-items: center;
+    width: var(--size);
+    height: var(--size);
+    flex: none;
+    border-radius: 30%;
+    background:
+      radial-gradient(120% 120% at 0% 0%, rgb(255 255 255 / 0.35), transparent 50%),
+      conic-gradient(from 210deg at 50% 50%, #8b5cf6, #2b96f5, #1cc3c4, #2fcf86, #f5b83d, #8b5cf6);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: calc(var(--size) * 0.4);
+    letter-spacing: -0.04em;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    box-shadow:
+      inset 0 1px 1px rgb(255 255 255 / 0.5),
+      0 4px 14px -4px rgb(76 60 200 / 0.55);
+  }
+
+  .photo {
+    object-fit: cover;
+    border-radius: 50%;
+  }
+</style>

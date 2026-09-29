@@ -1,0 +1,219 @@
+---
+import Brand from './Brand.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import type { AppData, Lang } from '../data/types';
+import { localizePath, otherLang, useTranslations } from '../i18n';
+import { appStoreUrl, iconUrl } from '../lib/apps';
+
+interface Props {
+  lang: Lang;
+  path: string;
+  app?: AppData;
+}
+
+const { lang, path, app } = Astro.props;
+const t = useTranslations(lang);
+const home = localizePath('/', lang);
+const alt = otherLang(lang);
+const appHome = app ? localizePath(`/${app.slug}/`, lang) : undefined;
+const storeUrl = app ? appStoreUrl(app) : undefined;
+
+const links = app
+  ? [
+      { href: `${appHome}#features`, label: t('nav.features') },
+      ...(app.reviews.length ? [{ href: `${appHome}#reviews`, label: t('nav.reviews') }] : []),
+      { href: `${appHome}#faq`, label: t('nav.faq') },
+      { href: localizePath(`/${app.slug}/support/`, lang), label: t('app.links.support') },
+    ]
+  : [
+      { href: `${home}#apps`, label: t('nav.apps') },
+      { href: `${home}#about`, label: t('nav.about') },
+      { href: `${home}#contact`, label: t('nav.contact') },
+    ];
+---
+
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label={app ? app.name : site.author}>
+    <a class="brand" href={home} aria-label={`${site.author} — ${t('nav.home')}`}>
+      <Brand size={32} />
+      <span class:list={['brand-name', { 'hide-sm': app }]}>{site.author}</span>
+    </a>
+
+    {
+      app && appHome && (
+        <>
+          <span class="sep" aria-hidden="true">/</span>
+          <a class="crumb" href={appHome}>
+            <img class="app-icon" src={iconUrl(app)} alt="" width="28" height="28" />
+            <span>{app.name}</span>
+          </a>
+        </>
+      )
+    }
+
+    <ul class="links" role="list">
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="actions">
+      <a class="lang" href={localizePath(path, alt)} hreflang={alt} lang={alt} title={t('nav.switch')}>
+        <Icon name="globe" size={17} />
+        <span>{t('nav.switchShort')}</span>
+      </a>
+      {
+        storeUrl && app?.status === 'live' && (
+          <a class="btn btn-accent btn-sm download" href={storeUrl} target="_blank" rel="noopener">
+            <Icon name="apple" size={16} />
+            <span>{t('nav.download')}</span>
+          </a>
+        )
+      }
+    </div>
+  </nav>
+</header>
+
+<style>
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 12px var(--gutter) 0;
+    pointer-events: none;
+  }
+
+  .nav {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(100%, var(--max));
+    height: var(--nav-h);
+    margin-inline: auto;
+    padding: 0 10px 0 14px;
+    border-radius: 999px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .sep {
+    color: var(--text-3);
+    font-weight: 300;
+    font-size: 22px;
+    margin-inline: 2px;
+  }
+
+  .crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .crumb .app-icon {
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.1);
+  }
+
+  .links {
+    display: flex;
+    gap: 4px;
+    margin-left: auto !important;
+  }
+
+  .links a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-2);
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+
+  .links a:hover {
+    color: var(--text);
+    background: var(--card);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+
+  .lang:hover {
+    color: var(--text);
+    border-color: var(--line-strong);
+  }
+
+  @media (max-width: 900px) {
+    .links {
+      display: none;
+    }
+
+    .actions {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hide-sm {
+      display: none;
+    }
+
+    .nav {
+      padding-left: 12px;
+    }
+
+    .download span {
+      display: none;
+    }
+
+    .download {
+      width: 38px;
+      padding: 0;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .brand-name {
+      display: none;
+    }
+  }
+</style>

@@ -1,154 +1,136 @@
-# Benjamin Bleriot — iOS app portfolio
+# Benjamin Blériot — apps iPhone
 
-A fast, static portfolio for Benjamin Bleriot's iOS applications. It is built with
-[Astro](https://astro.build), TypeScript, content collections and native CSS, then
-deployed to GitHub Pages with GitHub Actions.
+Portfolio et pages officielles des apps iOS de Benjamin Blériot : présentation,
+confidentialité, conditions d’utilisation et assistance, en français et en anglais.
 
-## Local development
+Site statique généré avec [Astro](https://astro.build), publié sur GitHub Pages :
+**https://benjamin-bleriot.github.io**
 
-Requires Node.js 22.12 or newer.
+## Adresses
+
+Chaque app dispose de quatre pages, en français et en anglais (préfixe `/en/`) :
+
+| Page | Français | Anglais |
+| --- | --- | --- |
+| Présentation | `/flipseven/` | `/en/flipseven/` |
+| Confidentialité | `/flipseven/privacy/` | `/en/flipseven/privacy/` |
+| Conditions d’utilisation | `/flipseven/terms/` | `/en/flipseven/terms/` |
+| Assistance | `/flipseven/support/` | `/en/flipseven/support/` |
+
+Apps : `skyjo`, `flipseven`, `jogr`, `budgy`, `lumi` (bientôt).
+Mentions légales : `/legal/`. Des raccourcis redirigent aussi vers la bonne page
+(`/flip/`, `/skyjokeeper/`, `/expensestracker/`, `/storychild/`…).
+
+### À renseigner dans App Store Connect
+
+App Store Connect accepte une URL par langue : utilisez la version française pour le
+français et la version `/en/` pour les autres langues.
+
+| App | Politique de confidentialité | Assistance |
+| --- | --- | --- |
+| Skyjo Keeper | https://benjamin-bleriot.github.io/skyjo/privacy/ | https://benjamin-bleriot.github.io/skyjo/support/ |
+| Flip | https://benjamin-bleriot.github.io/flipseven/privacy/ | https://benjamin-bleriot.github.io/flipseven/support/ |
+| Jogr | https://benjamin-bleriot.github.io/jogr/privacy/ | https://benjamin-bleriot.github.io/jogr/support/ |
+| Budgy | https://benjamin-bleriot.github.io/budgy/privacy/ | https://benjamin-bleriot.github.io/budgy/support/ |
+
+Pour Budgy (abonnement), ajoutez aussi le lien des conditions d’utilisation dans la
+description : https://benjamin-bleriot.github.io/budgy/terms/
+
+## Développement
+
+Node.js 22.12 ou plus récent.
 
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:4321
+npm run build      # vérifie les types puis génère dist/
+npm run preview    # prévisualise dist/
 ```
 
-Astro prints the local development URL. Production output can be checked with:
+## Modifier le contenu
 
-```bash
-npm run build
-npm run preview
-```
+Tout le contenu éditable est dans `src/data/` :
 
-`npm run build` runs Astro's type/content checks before creating the static site in
-`dist/`.
+| Fichier | Contenu |
+| --- | --- |
+| `apps.ts` | Les apps : textes FR/EN, fonctionnalités, FAQ, avis, tarifs, couleurs, pratiques de données |
+| `site.ts` | Nom, e-mail, liens, boîte à outils, projets open source |
+| `legal/privacy.ts` | Modèle de politique de confidentialité (assemblé selon les pratiques de chaque app) |
+| `legal/terms.ts` | Modèle de conditions d’utilisation |
+| `redirects.mjs` | Raccourcis et anciennes adresses |
+| `appstore.json` | Généré automatiquement — ne pas modifier à la main |
 
-## Content
+Les textes de l’interface (boutons, titres de sections) sont dans `src/i18n/ui.ts`.
 
-Each application is a Markdown or MDX entry in [`src/content/apps`](src/content/apps).
-Its typed frontmatter contains the product metadata, features, FAQs, optional verified
-reviews, Privacy and Terms drafts, and changelog entries. The Markdown body is the
-long-form app description.
+### Politiques de confidentialité
 
-The schema lives in [`src/content.config.ts`](src/content.config.ts). A build fails
-with a useful validation error if a required field is missing or has the wrong type.
+Chaque app déclare ce qu’elle fait réellement dans `privacy.practices` :
 
-Never add an App Store rating, review, privacy claim or product capability until it is
-verified. Empty arrays and empty App Store fields are intentionally supported.
+| Pratique | Quand l’utiliser |
+| --- | --- |
+| `revenuecat` | Achats intégrés gérés avec RevenueCat |
+| `storekit` | Achats intégrés vérifiés uniquement avec StoreKit |
+| `icloud-sync` | Synchronisation CloudKit (base privée de l’utilisateur) |
+| `camera-on-device` | Photo analysée sur l’appareil (Apple Intelligence) |
+| `camera-pcc` | Photo analysée par Apple Intelligence, éventuellement via Private Cloud Compute |
+| `notifications` | Notifications locales |
+| `story-generation` | Contenu généré en ligne à partir des choix de l’utilisateur |
+| `speech` | Lecture à voix haute par les voix d’iOS |
+| `external-links` | Liens vers des sites externes |
 
-## Adding a new app
+La politique est alors rédigée automatiquement en français et en anglais. Pensez à
+mettre à jour `privacy.updated` à chaque changement, et à ajouter la pratique
+correspondante avant de publier une nouvelle fonction (par exemple `camera-pcc` pour
+Skyjo Keeper le jour où le calcul du score par photo sort).
 
-1. Copy an existing entry in `src/content/apps/` to `my-new-app.md`.
-2. Change `name`, `slug`, descriptions, category, order and accent color.
-3. Keep `appStoreUrl` empty until a real listing exists.
-4. Replace the clearly marked legal placeholders only after the app's data practices
-   and terms have been reviewed.
-5. Run `npm run build`.
+### Ajouter une app
 
-The following routes are created automatically from the one content entry:
+1. Dans `src/data/apps.ts`, copiez le bloc d’une app existante et changez `slug`,
+   `appStoreId`, `bundleId`, les textes et les couleurs (`theme`).
+2. Récupérez l’icône et les captures d’écran :
+   ```bash
+   npm run appstore:images
+   ```
+3. Choisissez les captures de la carte d’accueil et du haut de page (`shots`).
+4. `npm run dev` pour vérifier, puis poussez sur `main`.
 
-```text
-/apps/my-new-app/
-/privacy/my-new-app/
-/terms/my-new-app/
-/changelog/my-new-app/
-```
+Pour une app pas encore publiée, utilisez `status: 'soon'` et placez l’icône dans
+`public/images/apps/<slug>/icon.webp` (+ `icon.png`). `hidden: true` masque une app
+du site sans supprimer ses données.
 
-Minimal frontmatter shape:
+⚠️ N’utilisez pas comme `slug` le nom d’un dépôt GitHub qui publie son propre site
+Pages (`flip-score`, `komoot-to-gpx`, `jogr-ios`) : GitHub servirait ce dépôt à la place.
 
-```yaml
----
-name: "My New App"
-slug: "my-new-app"
-description: "A factual product description."
-shortDescription: "A short, factual description."
-category: "Utilities"
-status: "in-development"
-featuredOrder: 5
-appStoreUrl: ""
-appStoreId: ""
-icon: ""
-accent: "#496E60"
-hero:
-  title: "A concise product promise."
-  subtitle: "A factual supporting sentence."
-features: []
-screenshots: []
-reviews: []
-faq: []
-technologies: []
-links: []
-privacy:
-  lastUpdated: "2026-08-31"
-  isPlaceholder: true
-  summary: "Draft privacy information to review before release."
-  sections:
-    - heading: "Draft status"
-      content: "This is not a legally reviewed privacy policy."
-terms:
-  lastUpdated: "2026-08-31"
-  isPlaceholder: true
-  summary: "Draft terms to review before release."
-  sections:
-    - heading: "Draft status"
-      content: "These are not legally reviewed terms."
-changelog: []
----
+## Données App Store
 
-Longer factual description here.
-```
+`npm run appstore` interroge l’App Store (15 pays) et enregistre dans
+`src/data/appstore.json` les notes, le nombre d’avis, la version et les nouveautés de
+chaque app du compte développeur. `npm run appstore:images` télécharge en plus les
+icônes, les captures (FR et EN) et les badges officiels dans `public/appstore/`.
 
-## App icons and screenshots
+Le déploiement exécute `npm run appstore` automatiquement, et le site est reconstruit
+chaque lundi : les notes et versions restent à jour sans intervention. Les images, elles,
+sont versionnées : relancez `npm run appstore:images` puis commitez après avoir changé
+les captures sur l’App Store.
 
-Put assets in `public/images/apps/<slug>/`:
+L’image de partage de l’accueil (`public/og.png`, `public/og-en.png`) se régénère avec
+`python3 scripts/og.py` (nécessite Pillow).
 
-```text
-public/images/apps/my-new-app/
-├── icon.png
-└── screenshots/
-    ├── 01-home.png
-    └── 02-detail.png
-```
+## Déploiement
 
-`icon.webp`, `icon.png` and `icon.jpg` are detected automatically. Supported images in
-the `screenshots/` folder are sorted naturally and displayed automatically at the next
-build. No fake product screenshots are included.
+Chaque push sur `main` déclenche `.github/workflows/deploy.yml`, qui compile le site et
+le publie sur GitHub Pages (Settings › Pages › Source : **GitHub Actions**).
 
-For precise accessibility text or a caption, declare an existing image in the app entry:
+### Nom de domaine personnalisé
 
-```yaml
-screenshots:
-  - image: "/images/apps/my-new-app/screenshots/01-home.png"
-    alt: "My New App home screen"
-    caption: "Optional caption"
-```
+1. Settings › Pages › Custom domain : saisissez le domaine.
+2. Ajoutez chez votre registrar les enregistrements DNS indiqués par GitHub.
+3. Créez `public/CNAME` contenant uniquement le domaine, puis poussez.
 
-## SEO
+Les URL canoniques, le plan du site et `robots.txt` suivent automatiquement l’adresse
+fournie par GitHub Pages.
 
-The shared SEO component produces titles, descriptions, canonical URLs, Open Graph and
-Twitter/X cards. App pages include `SoftwareApplication` JSON-LD; the homepage includes
-`Person` and `WebSite` data. Astro generates the sitemap, and `robots.txt` uses the
-configured site URL. Ratings are omitted unless real data is added deliberately.
+## Confidentialité du site
 
-## GitHub Pages deployment
-
-The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on
-every push to `main`. It installs locked dependencies, checks and builds the Astro site,
-uploads `dist/`, and deploys it through the official GitHub Pages actions.
-
-In the repository settings, set **Pages → Build and deployment → Source** to
-**GitHub Actions** if it is not already selected.
-
-The default site URL is `https://benjamin-bleriot.github.io`. It can be overridden for
-any build with `SITE_URL` (see `.env.example`).
-
-## Adding a custom domain
-
-1. Configure the domain in the repository's GitHub Pages settings.
-2. Add the DNS records requested by GitHub.
-3. Add `public/CNAME` containing only the hostname.
-4. Set `SITE_URL=https://example.com` for local/alternative builds. The deployment
-   workflow automatically receives GitHub Pages' configured base URL.
-5. Rebuild and verify canonical, sitemap and `robots.txt` URLs.
-
-Do not add a `CNAME` until a real domain has been selected.
+Aucun cookie, aucune mesure d’audience, aucune ressource externe : les polices et les
+images sont servies par le site lui-même.

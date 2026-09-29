@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="15" fill="#111114"/>
-  <path d="M19 15h14c9 0 14 4 14 11 0 4-2 8-6 9 5 2 7 5 7 10 0 8-6 12-15 12H19V15Zm13 17c5 0 8-2 8-6 0-3-3-5-8-5h-6v11h6Zm1 19c5 0 8-2 8-6s-3-6-8-6h-7v12h7Z" fill="#fff"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset=".45" stop-color="#2b96f5"/>
+      <stop offset=".75" stop-color="#1cc3c4"/>
+      <stop offset="1" stop-color="#2fcf86"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="19" fill="url(#g)"/>
+  <path fill="#fff" d="M13 17h11.2c5.3 0 8.4 2.6 8.4 6.7 0 2.7-1.5 4.7-3.9 5.5 3 .7 4.9 3 4.9 6.1 0 4.6-3.4 7.7-9.1 7.7H13V17zm10 10.6c2.5 0 3.8-1 3.8-2.8S25.5 22 23 22h-4.3v5.6H23zm.6 10.4c2.7 0 4.2-1.1 4.2-3.1s-1.5-3.1-4.2-3.1h-4.9V38h4.9z" transform="translate(-4 3)"/>
+  <path fill="#fff" fill-opacity=".85" d="M35 17h11.2c5.3 0 8.4 2.6 8.4 6.7 0 2.7-1.5 4.7-3.9 5.5 3 .7 4.9 3 4.9 6.1 0 4.6-3.4 7.7-9.1 7.7H35V17zm10 10.6c2.5 0 3.8-1 3.8-2.8S47.5 22 45 22h-4.3v5.6H45zm.6 10.4c2.7 0 4.2-1.1 4.2-3.1s-1.5-3.1-4.2-3.1h-4.9V38h4.9z" transform="translate(0 3)"/>
 </svg>

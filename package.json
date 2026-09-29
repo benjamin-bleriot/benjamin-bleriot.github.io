@@ -1,21 +1,27 @@
 {
-  "name": "benjamin-bleriot.github.io",
-  "version": "1.0.0",
+  "name": "benjamin-bleriot-portfolio",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Portfolio et pages légales des apps iOS de Benjamin Blériot, publiés sur GitHub Pages.",
   "scripts": {
-    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
-    "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && ASTRO_TELEMETRY_DISABLED=1 astro build",
-    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "appstore": "node scripts/appstore.mjs",
+    "appstore:images": "node scripts/appstore.mjs --images",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.6.0",
-    "astro": "^7.2.0"
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/nunito": "^5.3.0",
+    "astro": "^7.3.5"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
-    "typescript": "^5.9.2"
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=22.12.0"

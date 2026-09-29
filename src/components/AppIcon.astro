@@ -1,15 +1,24 @@
 ---
+import type { AppData } from '../data/types';
+import { iconUrl } from '../lib/apps';
+
 interface Props {
-  name: string;
-  icon?: string;
-  accent: string;
-  size?: 'small' | 'large';
+  app: AppData;
+  size: number;
+  class?: string;
+  eager?: boolean;
 }
 
-const { name, icon, accent, size = 'small' } = Astro.props;
-const initials = name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2);
+const { app, size, class: className, eager = false } = Astro.props;
 ---
 
-<div class:list={['app-icon', size]} style={`--app-accent: ${accent}`}>
-  {icon ? <img src={icon} alt={`Icône de l’application ${name}`} width="128" height="128" loading={size === 'small' ? 'lazy' : 'eager'} /> : <span aria-hidden="true">{initials}</span>}
-</div>
+<img
+  class:list={['app-icon', className]}
+  src={iconUrl(app)}
+  alt={`${app.name}`}
+  width={size}
+  height={size}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  style={`width:${size}px;height:${size}px`}
+/>

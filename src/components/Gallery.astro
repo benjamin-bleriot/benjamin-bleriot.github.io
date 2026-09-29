@@ -1,0 +1,115 @@
+---
+import Icon from './Icon.astro';
+import type { Lang } from '../data/types';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  shots: string[];
+  name: string;
+  lang: Lang;
+}
+
+const { shots, name, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="gallery" data-gallery>
+  <ul class="track" role="list" tabindex="0" aria-label={t('app.gallery.title')}>
+    {
+      shots.map((src, index) => (
+        <li>
+          <img
+            src={src}
+            alt={t('app.shotAlt', { app: name, n: index + 1 })}
+            width="600"
+            height="1304"
+            loading="lazy"
+            decoding="async"
+          />
+        </li>
+      ))
+    }
+  </ul>
+  <div class="container controls">
+    <button type="button" class="nav-btn" data-dir="-1" aria-label={t('app.gallery.prev')}>
+      <Icon name="chevron-left" size={20} />
+    </button>
+    <button type="button" class="nav-btn" data-dir="1" aria-label={t('app.gallery.next')}>
+      <Icon name="chevron-right" size={20} />
+    </button>
+  </div>
+</div>
+
+<script>
+  for (const gallery of document.querySelectorAll<HTMLElement>('[data-gallery]')) {
+    const track = gallery.querySelector<HTMLElement>('.track');
+    if (!track) continue;
+    for (const button of gallery.querySelectorAll<HTMLButtonElement>('button[data-dir]')) {
+      button.addEventListener('click', () => {
+        const direction = Number(button.dataset.dir ?? 1);
+        track.scrollBy({ left: direction * track.clientWidth * 0.75, behavior: 'smooth' });
+      });
+    }
+  }
+</script>
+
+<style>
+  .track {
+    --inset: max(var(--gutter), calc((100vw - var(--max)) / 2));
+    display: flex;
+    gap: clamp(14px, 2vw, 22px);
+    overflow-x: auto;
+    padding: 12px var(--inset) 36px;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--inset);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track li {
+    flex: none;
+    scroll-snap-align: start;
+  }
+
+  .track img {
+    width: clamp(210px, 22vw, 272px);
+    border-radius: clamp(20px, 2.2vw, 28px);
+    box-shadow:
+      0 0 0 1px var(--line),
+      var(--shadow-md);
+    transition: transform 0.5s var(--ease);
+  }
+
+  .track img:hover {
+    transform: translateY(-6px);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .nav-btn {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--card);
+    cursor: pointer;
+    transition:
+      transform 0.25s var(--ease),
+      border-color 0.25s;
+  }
+
+  .nav-btn:hover {
+    transform: scale(1.06);
+    border-color: color-mix(in srgb, var(--text) 30%, transparent);
+  }
+</style>

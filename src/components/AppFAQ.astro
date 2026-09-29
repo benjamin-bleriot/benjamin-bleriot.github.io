@@ -1,7 +1,0 @@
----
-import type { CollectionEntry } from 'astro:content';
-interface Props { faq: CollectionEntry<'apps'>['data']['faq'] }
-const { faq } = Astro.props;
----
-
-{faq.length > 0 && <section class="section faq-section" id="faq" aria-labelledby="faq-title"><div class="container narrow"><div class="section-heading"><p class="eyebrow">Questions fréquentes</p><h2 id="faq-title">Bon à savoir.</h2></div><div class="faq-list">{faq.map((item) => <details><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div></div></section>}

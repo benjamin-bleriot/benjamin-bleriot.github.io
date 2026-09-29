@@ -1,0 +1,34 @@
+---
+import type { Lang } from '../data/types';
+
+interface Props {
+  href: string;
+  lang: Lang;
+  height?: number;
+}
+
+const { href, lang, height = 52 } = Astro.props;
+// Badges officiels d'Apple, téléchargés par `npm run appstore:images`.
+const ratio = lang === 'fr' ? 126.50751 / 40 : 119.66407 / 40;
+const alt = lang === 'fr' ? 'Télécharger dans l’App Store' : 'Download on the App Store';
+---
+
+<a class="badge" href={href} target="_blank" rel="noopener">
+  <img src={`/appstore/badge-${lang}.svg`} alt={alt} width={Math.round(height * ratio)} height={height} />
+</a>
+
+<style>
+  .badge {
+    display: inline-block;
+    border-radius: 12px;
+    transition: transform 0.25s var(--ease);
+  }
+
+  .badge:hover {
+    transform: translateY(-2px);
+  }
+
+  .badge img {
+    height: auto;
+  }
+</style>

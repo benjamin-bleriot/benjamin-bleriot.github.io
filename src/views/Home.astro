@@ -1,0 +1,556 @@
+---
+import Base from '../layouts/Base.astro';
+import AppCard from '../components/AppCard.astro';
+import Brand from '../components/Brand.astro';
+import Dock from '../components/Dock.astro';
+import Icon from '../components/Icon.astro';
+import SoonCard from '../components/SoonCard.astro';
+import type { IconName } from '../components/icons';
+import { liveApps, visibleApps } from '../data/apps';
+import { projects, site } from '../data/site';
+import type { Lang } from '../data/types';
+import { formatNumber, formatRating, useTranslations } from '../i18n';
+import { portfolioStats } from '../lib/apps';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const stats = portfolioStats();
+const soonApps = visibleApps.filter((app) => app.status === 'soon');
+const siteUrl = (Astro.site ?? new URL('https://benjamin-bleriot.github.io')).href;
+
+const values: { icon: IconName; key: '1' | '2' | '3' | '4'; color: string }[] = [
+  { icon: 'device', key: '1', color: 'var(--aurora-3)' },
+  { icon: 'shield', key: '2', color: 'var(--aurora-4)' },
+  { icon: 'sparkles', key: '3', color: 'var(--aurora-1)' },
+  { icon: 'message', key: '4', color: 'var(--aurora-2)' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: site.author,
+    url: siteUrl,
+    jobTitle: site.role[lang],
+    sameAs: [site.github, site.appStoreDeveloper],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.author,
+    url: siteUrl,
+    inLanguage: ['fr-FR', 'en-US'],
+  },
+];
+---
+
+<Base lang={lang} path="/" title={t('home.title')} description={t('home.description')} jsonLd={jsonLd}>
+  <!-- ─────────────────────────────── Accueil -->
+  <section class="hero">
+    <div class="aurora" aria-hidden="true">
+      <span style="background: var(--aurora-1); top: -22vmax; left: -12vmax"></span>
+      <span style="background: var(--aurora-2); top: -18vmax; right: -14vmax"></span>
+      <span style="background: var(--aurora-3); top: 6vmax; left: 30%"></span>
+    </div>
+
+    <div class="container hero-inner">
+      <a class="pill glass" href="#apps">
+        <span class="dot" aria-hidden="true"></span>
+        {t('home.badge', { n: stats.apps })}
+        <Icon name="arrow-right" size={15} />
+      </a>
+
+      <h1 class="title-xl">
+        {t('home.title1')}<br />
+        <span class="gradient-text">{t('home.title2')}</span>
+      </h1>
+
+      <p class="lead hero-lead">{t('home.lead')}</p>
+
+      <div class="cta">
+        <a class="btn btn-primary" href="#apps">
+          {t('home.cta.apps')}
+          <Icon name="arrow-right" size={18} class="icon-arrow" />
+        </a>
+        <a class="btn btn-ghost" href="#contact">{t('home.cta.contact')}</a>
+      </div>
+
+      <Dock apps={visibleApps} lang={lang} />
+
+      <dl class="stats">
+        <div>
+          <dt>{t('home.stats.apps')}</dt>
+          <dd>{stats.apps}</dd>
+        </div>
+        <div>
+          <dt>{t('home.stats.rating')}</dt>
+          <dd>{formatRating(stats.average, lang)}<span class="star">★</span></dd>
+        </div>
+        <div>
+          <dt>{t('home.stats.ratings')}</dt>
+          <dd>{formatNumber(stats.countRounded, lang)}+</dd>
+        </div>
+        <div>
+          <dt>{t('home.stats.languages')}</dt>
+          <dd>{stats.languages}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Apps -->
+  <section class="section" id="apps">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{t('home.apps.eyebrow')}</p>
+        <h2 class="title-l">{t('home.apps.title')}</h2>
+        <p class="lead">{t('home.apps.lead')}</p>
+      </header>
+
+      <div class="app-grid">
+        {liveApps.map((app) => <AppCard app={app} lang={lang} />)}
+      </div>
+
+      {soonApps.map((app) => <SoonCard app={app} lang={lang} />)}
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Valeurs -->
+  <section class="section values">
+    <div class="container">
+      <header class="section-head center">
+        <p class="eyebrow">{t('home.values.eyebrow')}</p>
+        <h2 class="title-l">{t('home.values.title')}</h2>
+      </header>
+
+      <ul class="values-grid" role="list">
+        {
+          values.map((value) => (
+            <li class="card value reveal" style={`--tint:${value.color}`}>
+              <span class="value-icon">
+                <Icon name={value.icon} size={24} />
+              </span>
+              <h3>{t(`home.values.${value.key}.title`)}</h3>
+              <p>{t(`home.values.${value.key}.text`)}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Open source -->
+  <section class="section projects">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{t('home.projects.eyebrow')}</p>
+        <h2 class="title-l">{t('home.projects.title')}</h2>
+      </header>
+
+      <ul class="projects-grid" role="list">
+        {
+          projects.map((project) => (
+            <li class="card project reveal">
+              <p class="chip">
+                <Icon name={project.url === project.repo ? 'puzzle' : 'globe'} size={16} />
+                {project.kind[lang]}
+              </p>
+              <h3>{project.name}</h3>
+              <p class="muted">{project.description[lang]}</p>
+              <div class="project-links">
+                {project.url !== project.repo && (
+                  <a class="btn btn-primary btn-sm" href={project.url} target="_blank" rel="noopener">
+                    {t('home.projects.open')}
+                    <Icon name="arrow-up-right" size={16} />
+                  </a>
+                )}
+                <a class="btn btn-ghost btn-sm" href={project.repo} target="_blank" rel="noopener">
+                  <Icon name="github" size={16} />
+                  {t('home.projects.code')}
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── À propos -->
+  <section class="section about" id="about">
+    <div class="container about-grid">
+      <div class="card profile reveal">
+        <Brand size={96} />
+        <div>
+          <p class="profile-name">{site.author}</p>
+          <p class="muted">{site.role[lang]}</p>
+        </div>
+        <div class="stack">
+          <p class="eyebrow">{t('home.about.stack')}</p>
+          <ul role="list">
+            {site.stack.map((item) => <li class="chip">{item}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="about-text">
+        <p class="eyebrow">{t('home.about.eyebrow')}</p>
+        <h2 class="title-l">{t('home.about.title')}</h2>
+        <p class="lead">{t('home.about.p1')}</p>
+        <p class="lead">{t('home.about.p2')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── Contact -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="contact-card grain reveal">
+        <div class="aurora" aria-hidden="true">
+          <span style="background: var(--aurora-1); top: -30%; left: -10%; width: 60%; height: 140%"></span>
+          <span style="background: var(--aurora-2); top: -20%; right: -10%; width: 55%; height: 130%"></span>
+          <span style="background: var(--aurora-4); bottom: -60%; left: 30%; width: 50%; height: 120%"></span>
+        </div>
+        <h2 class="title-l">{t('home.contact.title')}</h2>
+        <p class="lead">{t('home.contact.lead')}</p>
+        <div class="cta">
+          <a class="btn btn-primary" href={`mailto:${site.email}`}>
+            <Icon name="mail" size={18} />
+            {t('home.contact.email')}
+          </a>
+          <a class="btn btn-ghost" href={site.github} target="_blank" rel="noopener">
+            <Icon name="github" size={18} />
+            GitHub
+          </a>
+        </div>
+        <p class="email">{site.email}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Accueil */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    margin-top: calc(-1 * (var(--nav-h) + 12px));
+    padding-top: calc(var(--nav-h) + clamp(56px, 10vw, 120px));
+    padding-bottom: clamp(40px, 7vw, 80px);
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    z-index: -1;
+  }
+
+  .hero-inner {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 26px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .pill:hover {
+    transform: translateY(-2px);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 60%, transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dot {
+      animation: pulse 2.4s infinite;
+    }
+  }
+
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 8px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  h1 {
+    max-width: 17ch;
+    font-size: clamp(2.5rem, 6.6vw, 5.2rem);
+  }
+
+  .hero-lead {
+    max-width: 620px;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .hero :global(.dock) {
+    margin-top: clamp(20px, 4vw, 40px);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 0;
+    margin: 8px 0 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--card);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  .stats div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    padding: 16px clamp(18px, 3vw, 34px);
+  }
+
+  .stats div + div {
+    border-left: 1px solid var(--line);
+  }
+
+  .stats dt {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .star {
+    margin-left: 2px;
+    font-size: 0.7em;
+    color: var(--star);
+    vertical-align: 0.15em;
+  }
+
+  @media (max-width: 640px) {
+    .stats {
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+    }
+
+    .stats div:nth-child(3) {
+      border-left: 0;
+    }
+
+    .stats div:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  /* Apps */
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  @media (max-width: 860px) {
+    .app-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Valeurs */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .value {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    padding: 28px 24px;
+  }
+
+  .value-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 6px;
+    border-radius: 15px;
+    background: color-mix(in srgb, var(--tint) 16%, transparent);
+    color: var(--tint);
+  }
+
+  .value::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(80% 60% at 0% 0%, color-mix(in srgb, var(--tint) 12%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+
+  .value h3 {
+    font-size: 20px;
+  }
+
+  .value p {
+    color: var(--text-2);
+    font-size: 16px;
+  }
+
+  @media (max-width: 980px) {
+    .values-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Open source */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .project {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 14px;
+    padding: 30px;
+  }
+
+  .project h3 {
+    font-size: 26px;
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 760px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* À propos */
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(28px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .profile {
+    display: grid;
+    gap: 22px;
+    padding: 36px;
+  }
+
+  .profile-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .stack {
+    display: grid;
+    gap: 12px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .stack ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .about-text {
+    display: grid;
+    gap: 18px;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-text {
+      order: -1;
+    }
+  }
+
+  /* Contact */
+  .contact-card {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    padding: clamp(48px, 9vw, 96px) 24px;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--line);
+    background: var(--card);
+    text-align: center;
+  }
+
+  .contact-card .aurora span {
+    width: auto;
+    filter: blur(70px);
+  }
+
+  .email {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-3);
+    user-select: all;
+  }
+</style>

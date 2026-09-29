@@ -1,0 +1,393 @@
+---
+import Base from '../layouts/Base.astro';
+import AppIcon from '../components/AppIcon.astro';
+import Icon from '../components/Icon.astro';
+import { buildPrivacy } from '../data/legal/privacy';
+import { buildTerms } from '../data/legal/terms';
+import type { AppData, Lang } from '../data/types';
+import { formatDate, localizePath, useTranslations } from '../i18n';
+import { appStoreUrl, iconPng } from '../lib/apps';
+
+interface Props {
+  app: AppData;
+  lang: Lang;
+  kind: 'privacy' | 'terms';
+}
+
+const { app, lang, kind } = Astro.props;
+const t = useTranslations(lang);
+const link = (sub: string) => localizePath(`/${app.slug}/${sub}`, lang);
+const isPrivacy = kind === 'privacy';
+const doc = isPrivacy ? buildPrivacy(app, lang) : { ...buildTerms(app, lang, link('privacy/')), glance: [] };
+const meta = isPrivacy ? app.privacy : app.terms;
+const title = isPrivacy ? t('doc.privacy') : t('doc.terms');
+const storeUrl = appStoreUrl(app);
+
+const related = [
+  isPrivacy
+    ? { href: link('terms/'), label: t('doc.terms'), icon: 'book' as const }
+    : { href: link('privacy/'), label: t('doc.privacy'), icon: 'shield' as const },
+  { href: link('support/'), label: t('app.links.support'), icon: 'message' as const },
+  { href: link(''), label: app.name, icon: 'device' as const },
+];
+---
+
+<Base
+  lang={lang}
+  path={`/${app.slug}/${kind}/`}
+  title={`${title} — ${app.name}`}
+  description={doc.summary}
+  image={iconPng(app)}
+  imageAlt={app.name}
+  largeImage={false}
+  app={app}
+>
+  <section class="doc-hero">
+    <div class="aurora" aria-hidden="true">
+      <span style="background: var(--grad-a); top: -30vmax; left: -10vmax"></span>
+      <span style="background: var(--glow); top: -30vmax; right: -16vmax"></span>
+    </div>
+    <div class="container-narrow hero-inner">
+      <a class="back" href={link('')}>
+        <Icon name="arrow-left" size={16} />
+        {t('doc.back', { app: app.name })}
+      </a>
+      <div class="identity">
+        <AppIcon app={app} size={56} eager />
+        <p class="eyebrow">{app.name}</p>
+      </div>
+      <h1 class="title-l">{title}</h1>
+      <p class="updated">
+        <Icon name="calendar" size={16} />
+        {t('doc.updated', { date: formatDate(meta.updated, lang) })}
+      </p>
+      {
+        meta.draft && (
+          <p class="draft">
+            <Icon name="info" size={18} />
+            <span>{t('doc.draft', { app: app.name })}</span>
+          </p>
+        )
+      }
+      <p class="lead">{doc.summary}</p>
+      {
+        doc.glance.length > 0 && (
+          <div class="glance card">
+            <p class="glance-title">{t('doc.glance')}</p>
+            <ul role="list">
+              {doc.glance.map((item) => (
+                <li>
+                  <span class="glance-icon">
+                    <Icon name={item.icon} size={18} />
+                  </span>
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <div class="container doc-grid">
+    <nav class="toc" aria-label={t('doc.toc')}>
+      <p class="toc-title">{t('doc.toc')}</p>
+      <ol role="list">
+        {
+          doc.sections.map((section, index) => (
+            <li>
+              <a href={`#${section.id}`}>
+                <span class="num">{String(index + 1).padStart(2, '0')}</span>
+                {section.title}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <article class="doc">
+      {
+        doc.sections.map((section, index) => (
+          <section id={section.id} class="doc-section">
+            <h2>
+              <span class="num">{String(index + 1).padStart(2, '0')}</span>
+              {section.title}
+            </h2>
+            <div class="prose" set:html={section.html} />
+          </section>
+        ))
+      }
+
+      <footer class="doc-footer">
+        <p class="toc-title">{t('doc.related')}</p>
+        <ul role="list" class="related">
+          {
+            related.map((item) => (
+              <li>
+                <a class="card related-link" href={item.href}>
+                  <Icon name={item.icon} size={20} />
+                  <span>{item.label}</span>
+                  <Icon name="arrow-right" size={16} />
+                </a>
+              </li>
+            ))
+          }
+          {
+            storeUrl && (
+              <li>
+                <a class="card related-link" href={storeUrl} target="_blank" rel="noopener">
+                  <Icon name="apple" size={20} />
+                  <span>{t('app.links.appstore')}</span>
+                  <Icon name="arrow-up-right" size={16} />
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </footer>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .doc-hero {
+    position: relative;
+    isolation: isolate;
+    margin-top: calc(-1 * (var(--nav-h) + 12px));
+    padding-top: calc(var(--nav-h) + clamp(40px, 7vw, 80px));
+    padding-bottom: clamp(32px, 5vw, 56px);
+    overflow: hidden;
+  }
+
+  .doc-hero .aurora span {
+    opacity: calc(var(--aurora-opacity) * 0.7);
+  }
+
+  .hero-inner {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+
+  .back:hover {
+    color: var(--text);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--text-3);
+  }
+
+  .draft {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: var(--radius-s);
+    border: 1px solid color-mix(in srgb, #f5a524 45%, transparent);
+    background: color-mix(in srgb, #f5a524 12%, transparent);
+    font-size: 15px;
+  }
+
+  .draft :global(.icon) {
+    flex: none;
+    margin-top: 2px;
+    color: #d98a00;
+  }
+
+  .glance {
+    width: 100%;
+    margin-top: 8px;
+    padding: 22px 24px;
+    border-radius: var(--radius-m);
+  }
+
+  .glance-title,
+  .toc-title {
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .glance ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px 20px;
+  }
+
+  .glance li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+  }
+
+  .glance-icon {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--success) 14%, transparent);
+    color: var(--success);
+  }
+
+  .doc-grid {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 780px);
+    justify-content: center;
+    gap: clamp(32px, 5vw, 72px);
+    padding-block: clamp(24px, 4vw, 48px) clamp(64px, 8vw, 104px);
+  }
+
+  .toc {
+    position: sticky;
+    top: calc(var(--nav-h) + 32px);
+    align-self: start;
+  }
+
+  .toc ol {
+    display: grid;
+    gap: 2px;
+    border-left: 1px solid var(--line);
+  }
+
+  .toc a {
+    display: flex;
+    gap: 10px;
+    padding: 7px 0 7px 16px;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    font-size: 14px;
+    color: var(--text-3);
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+
+  .toc a:hover {
+    color: var(--text);
+    border-left-color: var(--accent);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    color: var(--accent);
+  }
+
+  .doc {
+    display: grid;
+    gap: 12px;
+  }
+
+  .doc-section {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .doc-section:first-child {
+    padding-top: 0;
+  }
+
+  .doc-section h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: clamp(1.35rem, 2.2vw, 1.6rem);
+    letter-spacing: -0.02em;
+  }
+
+  .doc-section h2 .num {
+    font-size: 14px;
+  }
+
+  .doc-footer {
+    margin-top: 28px;
+  }
+
+  .related {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .related-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: var(--radius-m);
+    font-weight: 600;
+    transition:
+      transform 0.25s var(--ease),
+      border-color 0.25s;
+  }
+
+  .related-link span {
+    flex: 1;
+  }
+
+  .related-link > :global(.icon:first-child) {
+    color: var(--accent);
+  }
+
+  .related-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+  }
+
+  @media (max-width: 900px) {
+    .doc-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .toc {
+      position: static;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      background: var(--card);
+    }
+
+    .toc ol {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      border-left: 0;
+    }
+
+    .toc a {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>

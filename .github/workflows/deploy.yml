@@ -1,8 +1,11 @@
-name: Deploy Astro site to GitHub Pages
+name: Déploiement GitHub Pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    # Chaque lundi à 6 h UTC : notes, versions et nouveautés App Store à jour.
+    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -12,45 +15,49 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Récupérer le code
         uses: actions/checkout@v6
 
-      - name: Set up Node.js
+      - name: Installer Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
 
-      - name: Configure GitHub Pages
+      - name: Configurer GitHub Pages
         id: pages
         uses: actions/configure-pages@v6
 
-      - name: Install dependencies
+      - name: Installer les dépendances
         run: npm ci
 
-      - name: Build
+      - name: Synchroniser les données App Store
+        run: npm run appstore
+
+      - name: Compiler le site
         run: npm run build
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
+          ASTRO_TELEMETRY_DISABLED: 1
 
-      - name: Upload Pages artifact
+      - name: Préparer la publication
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Publier sur GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

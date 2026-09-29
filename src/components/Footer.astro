@@ -1,31 +1,176 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import Brand from './Brand.astro';
+import Icon from './Icon.astro';
+import { visibleApps } from '../data/apps';
+import { site } from '../data/site';
+import type { Lang } from '../data/types';
+import { localizePath, otherLang, useTranslations } from '../i18n';
 
 interface Props {
-  apps: CollectionEntry<'apps'>[];
+  lang: Lang;
+  path: string;
 }
 
-const { apps } = Astro.props;
+const { lang, path } = Astro.props;
+const t = useTranslations(lang);
+const alt = otherLang(lang);
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div>
-      <a class="footer-name" href="/">Benjamin Bleriot</a>
-      <p>Développeur iOS indépendant et créateur d’applications.</p>
+<footer class="footer">
+  <div class="container grid">
+    <div class="about">
+      <a class="brand" href={localizePath('/', lang)}>
+        <Brand size={36} />
+        <span>{site.author}</span>
+      </a>
+      <p class="tagline">{t('footer.tagline')}</p>
+      <div class="social">
+        <a href={`mailto:${site.email}`} aria-label="E-mail"><Icon name="mail" size={20} /></a>
+        <a href={site.github} target="_blank" rel="noopener" aria-label="GitHub"><Icon name="github" size={20} /></a>
+        <a href={site.appStoreDeveloper} target="_blank" rel="noopener" aria-label="App Store"><Icon name="apple" size={20} /></a>
+      </div>
     </div>
-    <nav aria-label="Application pages">
-      <h2>Applications</h2>
-      {apps.map((app) => <a href={`/apps/${app.data.slug}/`}>{app.data.name}</a>)}
+
+    <nav aria-label={t('footer.apps')}>
+      <h2>{t('footer.apps')}</h2>
+      <ul role="list">
+        {
+          visibleApps.map((app) => (
+            <li>
+              <a href={localizePath(`/${app.slug}/`, lang)}>{app.name}</a>
+              {app.status === 'soon' && <span class="soon">{t('home.soon')}</span>}
+            </li>
+          ))
+        }
+      </ul>
     </nav>
-    <nav aria-label="External links">
-      <h2>Me retrouver</h2>
-      <a href="https://github.com/benjamin-bleriot" rel="me noreferrer">GitHub</a>
+
+    <nav aria-label={t('footer.info')}>
+      <h2>{t('footer.info')}</h2>
+      <ul role="list">
+        <li><a href={localizePath('/legal/', lang)}>{t('footer.legal')}</a></li>
+        <li><a href={`mailto:${site.email}`}>{t('nav.contact')}</a></li>
+        <li><a href={site.github} target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href={localizePath(path, alt)} hreflang={alt} lang={alt}>{t('nav.switch')}</a></li>
+      </ul>
     </nav>
   </div>
-  <div class="container footer-bottom">
-    <p>© {year} Benjamin Bleriot.</p>
-    <p>Conçu et développé avec soin.</p>
+
+  <div class="container bottom">
+    <p>© {year} {site.author} · {t('footer.noCookies')}</p>
+    <p>{t('footer.apple')}</p>
   </div>
 </footer>
+
+<style>
+  .footer {
+    margin-top: 40px;
+    padding: 64px 0 40px;
+    border-top: 1px solid var(--line);
+    font-size: 15px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 40px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .tagline {
+    margin-top: 14px;
+    max-width: 320px;
+    color: var(--text-3);
+  }
+
+  .social {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .social a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    color: var(--text-2);
+    transition:
+      color 0.2s,
+      border-color 0.2s,
+      transform 0.2s var(--ease);
+  }
+
+  .social a:hover {
+    color: var(--text);
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+  }
+
+  h2 {
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  li + li {
+    margin-top: 10px;
+  }
+
+  li a {
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+
+  li a:hover {
+    color: var(--text);
+  }
+
+  .soon {
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--text-3);
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  @media (max-width: 760px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .about {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

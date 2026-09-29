@@ -1,7 +1,0 @@
----
-import type { CollectionEntry } from 'astro:content';
-interface Props { reviews: CollectionEntry<'apps'>['data']['reviews'] }
-const { reviews } = Astro.props;
----
-
-{reviews.length > 0 && <section class="section reviews-section" aria-labelledby="reviews-title"><div class="container"><div class="section-heading"><p class="eyebrow">Avis</p><h2 id="reviews-title">Ils en parlent sur l’App Store.</h2></div><div class="reviews-grid">{reviews.map((review) => <figure><blockquote>« {review.quote} »</blockquote><figcaption>{review.author} · {review.source}</figcaption></figure>)}</div></div></section>}

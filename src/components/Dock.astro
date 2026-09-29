@@ -1,0 +1,100 @@
+---
+import type { AppData, Lang } from '../data/types';
+import { localizePath, useTranslations } from '../i18n';
+import { iconUrl } from '../lib/apps';
+
+interface Props {
+  apps: AppData[];
+  lang: Lang;
+}
+
+const { apps, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<nav class="dock glass" aria-label={t('home.dock')}>
+  {
+    apps.map((app) => (
+      <a class="item" href={localizePath(`/${app.slug}/`, lang)}>
+        <img class="app-icon" src={iconUrl(app)} alt="" width="64" height="64" fetchpriority="high" />
+        <span class="label">
+          {app.name}
+          {app.status === 'soon' && <em> · {t('home.soon')}</em>}
+        </span>
+        <span class="visually-hidden">{app.name}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .dock {
+    --size: clamp(46px, 12.5vw, 66px);
+    display: inline-flex;
+    align-items: flex-end;
+    gap: clamp(8px, 2.4vw, 14px);
+    padding: clamp(9px, 2vw, 13px);
+    border-radius: calc(var(--size) * 0.5);
+  }
+
+  .item {
+    position: relative;
+    display: block;
+    transform-origin: 50% 100%;
+    transition: transform 0.45s var(--ease);
+  }
+
+  .item img {
+    width: var(--size);
+    height: var(--size);
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.1),
+      0 10px 22px -10px rgb(0 0 0 / 0.5);
+  }
+
+  .item:hover,
+  .item:focus-visible {
+    transform: translateY(-12px) scale(1.24);
+  }
+
+  .item:hover + .item,
+  .item:has(+ .item:hover) {
+    transform: translateY(-5px) scale(1.1);
+  }
+
+  .label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 16px);
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--ink-text);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.8);
+    transition:
+      opacity 0.25s var(--ease),
+      transform 0.35s var(--ease);
+  }
+
+  .label em {
+    font-style: normal;
+    opacity: 0.65;
+  }
+
+  .item:hover .label,
+  .item:focus-visible .label {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(0.8);
+  }
+
+  @media (hover: none) {
+    .label {
+      display: none;
+    }
+  }
+</style>

@@ -1,57 +1,96 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import type { CollectionEntry } from 'astro:content';
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import appstore from '../data/appstore.json';
+import { liveApps } from '../data/apps';
+import type { AppData, Lang } from '../data/types';
 
-export type AppEntry = CollectionEntry<'apps'>;
-export type Screenshot = AppEntry['data']['screenshots'][number];
-
-const imageExtensions = new Set(['.avif', '.webp', '.png', '.jpg', '.jpeg']);
-
-export function appPath(slug: string) {
-  return `/apps/${slug}/`;
+interface StoreLocale {
+  name: string;
+  version: string;
+  releaseNotes: string;
+  currentVersionReleaseDate: string;
+  price: number;
+  formattedPrice: string;
+  url: string;
 }
 
-export function getAppIcon(app: AppEntry): string | undefined {
-  if (app.data.icon && publicFileExists(app.data.icon)) return app.data.icon;
+export interface StoreApp {
+  bundleId: string;
+  releaseDate: string;
+  minimumOsVersion: string;
+  languages: string[];
+  genre: string;
+  fileSizeBytes: number;
+  rating: { average: number; count: number };
+  locales: Record<Lang, StoreLocale>;
+}
 
-  for (const filename of ['icon.webp', 'icon.png', 'icon.jpg']) {
-    const publicPath = `/images/apps/${app.data.slug}/${filename}`;
-    if (publicFileExists(publicPath)) return publicPath;
+const storeApps = appstore.apps as Record<string, StoreApp>;
+
+/** Données publiques de l'App Store (notes, version…), synchronisées par `npm run appstore`. */
+export const store = (app: AppData): StoreApp | undefined => (app.appStoreId ? storeApps[app.appStoreId] : undefined);
+
+export const appStoreUrl = (app: AppData) => (app.appStoreId ? `https://apps.apple.com/app/id${app.appStoreId}` : undefined);
+
+export const reviewUrl = (app: AppData) =>
+  app.appStoreId ? `https://apps.apple.com/app/id${app.appStoreId}?action=write-review` : undefined;
+
+export const iconUrl = (app: AppData) => app.icon ?? `/appstore/${app.appStoreId}/icon.webp`;
+
+/** Icône PNG carrée, utilisée pour les aperçus de partage. */
+export const iconPng = (app: AppData) => (app.icon ? app.icon.replace(/\.webp$/, '.png') : `/appstore/${app.appStoreId}/icon.png`);
+
+/** Captures d'écran présentes dans public/appstore/<id>/<langue>/, dans l'ordre de l'App Store. */
+export function screenshots(app: AppData, lang: Lang): string[] {
+  if (!app.appStoreId) return [];
+  for (const candidate of [lang, lang === 'fr' ? 'en' : 'fr']) {
+    const dir = join(process.cwd(), 'public', 'appstore', app.appStoreId, candidate);
+    if (!existsSync(dir)) continue;
+    const files = readdirSync(dir)
+      .filter((file) => /\.(webp|png|jpe?g)$/i.test(file))
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    if (files.length) return files.map((file) => `/appstore/${app.appStoreId}/${candidate}/${file}`);
   }
-
-  return undefined;
+  return [];
 }
 
-export function getAppScreenshots(app: AppEntry): Screenshot[] {
-  const declared = app.data.screenshots.filter(({ image }) => publicFileExists(image));
-  const screenshotDirectory = path.join(process.cwd(), 'public', 'images', 'apps', app.data.slug, 'screenshots');
-
-  if (!fs.existsSync(screenshotDirectory)) return declared;
-
-  const declaredPaths = new Set(declared.map(({ image }) => image));
-  const discovered = fs
-    .readdirSync(screenshotDirectory, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && imageExtensions.has(path.extname(entry.name).toLowerCase()))
-    .map((entry) => ({
-      image: `/images/apps/${app.data.slug}/screenshots/${entry.name}`,
-      alt: `Capture d’écran de ${app.data.name}`,
-    }))
-    .filter(({ image }) => !declaredPaths.has(image))
-    .sort((a, b) => a.image.localeCompare(b.image, undefined, { numeric: true }));
-
-  return [...declared, ...discovered];
+/** Récupère des captures par numéro (1…n), en ignorant celles qui n'existent pas. */
+export function pickShots(app: AppData, lang: Lang, numbers: readonly number[] = []): string[] {
+  const all = screenshots(app, lang);
+  return numbers.map((n) => all[n - 1]).filter((shot): shot is string => Boolean(shot));
 }
 
-function publicFileExists(publicPath: string): boolean {
-  if (!publicPath.startsWith('/')) return false;
-  return fs.existsSync(path.join(process.cwd(), 'public', publicPath.slice(1)));
+export const rating = (app: AppData) => store(app)?.rating;
+
+export const languagesOf = (app: AppData) => store(app)?.languages ?? app.languages ?? [];
+
+/** Chiffres clés affichés sur la page d'accueil. */
+export function portfolioStats() {
+  let weighted = 0;
+  let count = 0;
+  const languages = new Set<string>();
+  for (const app of liveApps) {
+    const data = store(app);
+    if (!data) continue;
+    weighted += data.rating.average * data.rating.count;
+    count += data.rating.count;
+    data.languages.forEach((language) => languages.add(language));
+  }
+  return {
+    apps: liveApps.length,
+    average: count ? weighted / count : 0,
+    count,
+    /** Arrondi à la dizaine inférieure pour rester vrai entre deux synchronisations. */
+    countRounded: Math.floor(count / 10) * 10,
+    languages: languages.size,
+  };
 }
 
-export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-  }).format(date);
-}
+/** CSS custom properties d'une app, à placer dans un attribut style. */
+export const themeStyle = (app: AppData) =>
+  [
+    `--accent:${app.theme.accent}`,
+    `--grad-a:${app.theme.gradient[0]}`,
+    `--grad-b:${app.theme.gradient[1]}`,
+    `--glow:${app.theme.glow ?? app.theme.gradient[0]}`,
+  ].join(';');

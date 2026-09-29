@@ -1,0 +1,299 @@
+{
+  "developerId": "1812098736",
+  "fetchedAt": "2026-09-29T19:33:17.007Z",
+  "apps": {
+    "6754793003": {
+      "bundleId": "com.benjaminbleriot.skyjokeeper",
+      "releaseDate": "2025-11-10T08:00:00Z",
+      "minimumOsVersion": "18.0",
+      "languages": [
+        "DA",
+        "NL",
+        "EN",
+        "FR",
+        "DE",
+        "IT",
+        "JA"
+      ],
+      "genre": "Games",
+      "fileSizeBytes": 11636736,
+      "rating": {
+        "average": 4.659,
+        "count": 258,
+        "storefronts": {
+          "fr": {
+            "average": 4.676,
+            "count": 145
+          },
+          "us": {
+            "average": 4.62,
+            "count": 50
+          },
+          "de": {
+            "average": 4.643,
+            "count": 14
+          },
+          "gb": {
+            "average": 4.833,
+            "count": 6
+          },
+          "ca": {
+            "average": 4.933,
+            "count": 15
+          },
+          "be": {
+            "average": 4,
+            "count": 3
+          },
+          "ch": {
+            "average": 4.538,
+            "count": 13
+          },
+          "es": {
+            "average": 5,
+            "count": 1
+          },
+          "nl": {
+            "average": 4.667,
+            "count": 3
+          },
+          "at": {
+            "average": 5,
+            "count": 1
+          },
+          "lu": {
+            "average": 5,
+            "count": 1
+          },
+          "dk": {
+            "average": 4.667,
+            "count": 3
+          },
+          "au": {
+            "average": 3.667,
+            "count": 3
+          }
+        }
+      },
+      "locales": {
+        "fr": {
+          "name": "Skyjo - Compteur de points",
+          "version": "1.5.0",
+          "releaseNotes": "Nouveautés de cette version\n\n• Ajout de la variante Japonaise\n• Amélioration de la stabilité et des performances\n• Corrections de bugs mineurs\n\nMerci pour votre soutien et bonnes parties !",
+          "currentVersionReleaseDate": "2026-06-16T22:06:04Z",
+          "price": 0,
+          "formattedPrice": "Gratuit",
+          "url": "https://apps.apple.com/fr/app/skyjo-compteur-de-points/id6754793003"
+        },
+        "en": {
+          "name": "Skyjo - Score Keeper",
+          "version": "1.5.0",
+          "releaseNotes": "What's new in this version\n\n• Added support for the Japanese variant\n• Improved stability and performance\n• Minor bug fixes\nThanks for your support and enjoy your games!",
+          "currentVersionReleaseDate": "2026-06-16T22:06:04Z",
+          "price": 0,
+          "formattedPrice": "Free",
+          "url": "https://apps.apple.com/us/app/skyjo-score-keeper/id6754793003"
+        }
+      }
+    },
+    "6760317673": {
+      "bundleId": "com.benjaminbleriot.flipseven",
+      "releaseDate": "2026-03-18T07:00:00Z",
+      "minimumOsVersion": "26.0",
+      "languages": [
+        "EN",
+        "FR",
+        "DE",
+        "IT",
+        "ES"
+      ],
+      "genre": "Games",
+      "fileSizeBytes": 12435456,
+      "rating": {
+        "average": 4.68,
+        "count": 200,
+        "storefronts": {
+          "fr": {
+            "average": 4.737,
+            "count": 76
+          },
+          "us": {
+            "average": 4.683,
+            "count": 41
+          },
+          "de": {
+            "average": 4.5,
+            "count": 54
+          },
+          "gb": {
+            "average": 5,
+            "count": 2
+          },
+          "ca": {
+            "average": 5,
+            "count": 14
+          },
+          "be": {
+            "average": 5,
+            "count": 1
+          },
+          "ch": {
+            "average": 5,
+            "count": 4
+          },
+          "es": {
+            "average": 5,
+            "count": 1
+          },
+          "nl": {
+            "average": 5,
+            "count": 1
+          },
+          "at": {
+            "average": 4.333,
+            "count": 3
+          },
+          "dk": {
+            "average": 3,
+            "count": 1
+          },
+          "au": {
+            "average": 5,
+            "count": 2
+          }
+        }
+      },
+      "locales": {
+        "fr": {
+          "name": "Flip - Compteur de points",
+          "version": "1.7.0",
+          "releaseNotes": "Nouveautés:\n- L’historique des scores est là ! Retrouvez chaque manche et les cartes jouées. Maintenez la carte appuyée pour modifier ou supprimer le score.\n- Ajoutez vos joueurs plus rapidement grâce aux noms enregistrés, profitez d’un classement plus lisible et utilisez l’app en allemand, italien ou espagnol.\n\nPour toute demande d’amélioration ou en cas de problème, vous pouvez m’écrire à benjamin.bleriot.pro@gmail.com.",
+          "currentVersionReleaseDate": "2026-08-27T16:35:20Z",
+          "price": 0,
+          "formattedPrice": "Gratuit",
+          "url": "https://apps.apple.com/fr/app/flip-compteur-de-points/id6760317673"
+        },
+        "en": {
+          "name": "Flip - Score tracker",
+          "version": "1.7.0",
+          "releaseNotes": "What's New:\n- Score history is here! Review every round and the cards played. Press and hold the card to edit or delete the score.\n- Add players faster with saved player names, enjoy clearer rankings, and use the app in French, German, Italian, or Spanish.\n\nFor feature requests or if you run into a problem, email me at benjamin.bleriot.pro@gmail.com.",
+          "currentVersionReleaseDate": "2026-08-27T16:35:20Z",
+          "price": 0,
+          "formattedPrice": "Free",
+          "url": "https://apps.apple.com/us/app/flip-score-tracker/id6760317673"
+        }
+      }
+    },
+    "6745412690": {
+      "bundleId": "com.benjaminbleriot.jogr",
+      "releaseDate": "2025-05-02T07:00:00Z",
+      "minimumOsVersion": "18.2",
+      "languages": [
+        "EN",
+        "FR",
+        "DE",
+        "ES"
+      ],
+      "genre": "Health & Fitness",
+      "fileSizeBytes": 3137536,
+      "rating": {
+        "average": 4.846,
+        "count": 13,
+        "storefronts": {
+          "fr": {
+            "average": 5,
+            "count": 6
+          },
+          "us": {
+            "average": 5,
+            "count": 2
+          },
+          "de": {
+            "average": 4,
+            "count": 1
+          },
+          "gb": {
+            "average": 5,
+            "count": 1
+          },
+          "ch": {
+            "average": 5,
+            "count": 2
+          },
+          "es": {
+            "average": 4,
+            "count": 1
+          }
+        }
+      },
+      "locales": {
+        "fr": {
+          "name": "Calendrier course à pied -Jogr",
+          "version": "1.4.5",
+          "releaseNotes": "We fixed an issue where the trail type you selected when creating a race was not being saved correctly.",
+          "currentVersionReleaseDate": "2026-03-20T16:48:36Z",
+          "price": 0,
+          "formattedPrice": "Gratuit",
+          "url": "https://apps.apple.com/fr/app/calendrier-course-%C3%A0-pied-jogr/id6745412690"
+        },
+        "en": {
+          "name": "Race & Run tracker – Jogr",
+          "version": "1.4.5",
+          "releaseNotes": "We fixed an issue where the trail type you selected when creating a race was not being saved correctly.",
+          "currentVersionReleaseDate": "2026-03-20T16:48:36Z",
+          "price": 0,
+          "formattedPrice": "Free",
+          "url": "https://apps.apple.com/us/app/race-run-tracker-jogr/id6745412690"
+        }
+      }
+    },
+    "6762646444": {
+      "bundleId": "com.benjaminbleriot.expensestracker",
+      "releaseDate": "2026-05-11T07:00:00Z",
+      "minimumOsVersion": "26.0",
+      "languages": [
+        "EN",
+        "FR",
+        "DE",
+        "IT",
+        "ES"
+      ],
+      "genre": "Finance",
+      "fileSizeBytes": 17114112,
+      "rating": {
+        "average": 5,
+        "count": 3,
+        "storefronts": {
+          "fr": {
+            "average": 5,
+            "count": 2
+          },
+          "ch": {
+            "average": 5,
+            "count": 1
+          }
+        }
+      },
+      "locales": {
+        "fr": {
+          "name": "Suivi dépenses: Budgy",
+          "version": "1.1.0",
+          "releaseNotes": "Cette mise à jour apporte des améliorations de performance et plusieurs corrections pour rendre Budgy encore plus agréable à utiliser.",
+          "currentVersionReleaseDate": "2026-05-19T04:58:50Z",
+          "price": 0,
+          "formattedPrice": "Gratuit",
+          "url": "https://apps.apple.com/fr/app/suivi-d%C3%A9penses-budgy/id6762646444"
+        },
+        "en": {
+          "name": "Spending tracker - Budgy",
+          "version": "1.1.0",
+          "releaseNotes": "This update includes performance improvements and several fixes to make Budgy even smoother to use.",
+          "currentVersionReleaseDate": "2026-05-19T04:58:50Z",
+          "price": 0,
+          "formattedPrice": "Free",
+          "url": "https://apps.apple.com/us/app/spending-tracker-budgy/id6762646444"
+        }
+      }
+    }
+  }
+}
