@@ -1,9 +1,9 @@
 import type { IconName } from '../components/icons';
 
-export type Lang = 'fr' | 'en';
-export const LANGS: Lang[] = ['fr', 'en'];
+export type Lang = 'fr' | 'en' | 'de';
+export const LANGS: Lang[] = ['fr', 'en', 'de'];
 
-/** Un texte disponible en français et en anglais. */
+/** Un texte disponible en français, en anglais et en allemand. */
 export type Text = Record<Lang, string>;
 
 export interface Feature {
@@ -106,7 +106,7 @@ export interface AppData {
   };
   terms: {
     updated: string;
-    /** Description courte utilisée dans l'article « Objet ». */
+    /** Description courte utilisée dans l'article « Objet » (en allemand, au datif : « einer iOS-App … »). */
     purpose: Text;
     purchases: 'lifetime' | 'subscription' | 'none';
     clauses?: TermsClause[];

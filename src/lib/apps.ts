@@ -43,7 +43,7 @@ export const iconPng = (app: AppData) => (app.icon ? app.icon.replace(/\.webp$/,
 /** Captures d'écran présentes dans public/appstore/<id>/<langue>/, dans l'ordre de l'App Store. */
 export function screenshots(app: AppData, lang: Lang): string[] {
   if (!app.appStoreId) return [];
-  for (const candidate of [lang, lang === 'fr' ? 'en' : 'fr']) {
+  for (const candidate of [lang, ...(lang === 'en' ? ['fr'] : ['en', 'fr'])]) {
     const dir = join(process.cwd(), 'public', 'appstore', app.appStoreId, candidate);
     if (!existsSync(dir)) continue;
     const files = readdirSync(dir)

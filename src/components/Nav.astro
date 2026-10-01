@@ -3,7 +3,7 @@ import Brand from './Brand.astro';
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 import type { AppData, Lang } from '../data/types';
-import { localizePath, otherLang, useTranslations } from '../i18n';
+import { LANG_NAMES, LANGS, localizePath, useTranslations } from '../i18n';
 import { appStoreUrl, iconUrl } from '../lib/apps';
 
 interface Props {
@@ -15,7 +15,6 @@ interface Props {
 const { lang, path, app } = Astro.props;
 const t = useTranslations(lang);
 const home = localizePath('/', lang);
-const alt = otherLang(lang);
 const appHome = app ? localizePath(`/${app.slug}/`, lang) : undefined;
 const storeUrl = app ? appStoreUrl(app) : undefined;
 
@@ -63,10 +62,29 @@ const links = app
     </ul>
 
     <div class="actions">
-      <a class="lang" href={localizePath(path, alt)} hreflang={alt} lang={alt} title={t('nav.switch')}>
-        <Icon name="globe" size={17} />
-        <span>{t('nav.switchShort')}</span>
-      </a>
+      <details class="lang">
+        <summary aria-label={t('nav.language')} title={t('nav.language')}>
+          <Icon name="globe" size={17} />
+          <span>{lang.toUpperCase()}</span>
+        </summary>
+        <ul class="lang-menu" role="list">
+          {
+            LANGS.map((code) => (
+              <li>
+                <a
+                  href={localizePath(path, code)}
+                  hreflang={code}
+                  lang={code}
+                  aria-current={code === lang ? 'true' : undefined}
+                >
+                  <span class="code">{code.toUpperCase()}</span>
+                  {LANG_NAMES[code]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
       {
         storeUrl && app?.status === 'live' && (
           <a class="btn btn-accent btn-sm download" href={storeUrl} target="_blank" rel="noopener">
@@ -161,6 +179,12 @@ const links = app
   }
 
   .lang {
+    position: relative;
+  }
+
+  .lang summary {
+    list-style: none;
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -177,9 +201,55 @@ const links = app
       border-color 0.2s;
   }
 
-  .lang:hover {
+  .lang summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .lang summary:hover,
+  .lang[open] summary {
     color: var(--text);
     border-color: var(--line-strong);
+  }
+
+  .lang-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 170px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    background: var(--card-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  .lang-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-2);
+  }
+
+  .lang-menu a:hover {
+    color: var(--text);
+    background: var(--card);
+  }
+
+  .lang-menu a[aria-current] {
+    color: var(--text);
+    background: var(--card);
+  }
+
+  .lang-menu .code {
+    width: 22px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-3);
   }
 
   @media (max-width: 900px) {
@@ -217,3 +287,19 @@ const links = app
     }
   }
 </style>
+
+<script>
+  // Ferme le menu des langues au clic à l'extérieur ou avec Échap.
+  const menu = document.querySelector<HTMLDetailsElement>('.nav .lang');
+  if (menu) {
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+  }
+</script>

@@ -4,9 +4,10 @@ import AppIcon from '../components/AppIcon.astro';
 import { visibleApps } from '../data/apps';
 import { useTranslations } from '../i18n';
 
-// GitHub Pages sert cette page pour toute adresse inconnue : elle est bilingue.
+// GitHub Pages sert cette page pour toute adresse inconnue : elle est trilingue.
 const fr = useTranslations('fr');
 const en = useTranslations('en');
+const de = useTranslations('de');
 ---
 
 <Base lang="fr" path="/" title={`${fr('notfound.title')} · ${en('notfound.title')}`} description={fr('notfound.text')} noindex>
@@ -20,9 +21,11 @@ const en = useTranslations('en');
       <h1 class="title-l">{fr('notfound.title')}</h1>
       <p class="lead">{fr('notfound.text')}</p>
       <p class="lead en" lang="en">{en('notfound.title')} — {en('notfound.text')}</p>
+      <p class="lead en" lang="de">{de('notfound.title')} — {de('notfound.text')}</p>
       <div class="cta">
         <a class="btn btn-primary" href="/">{fr('notfound.home')}</a>
         <a class="btn btn-ghost" href="/en/" lang="en">{en('notfound.home')}</a>
+        <a class="btn btn-ghost" href="/de/" lang="de">{de('notfound.home')}</a>
       </div>
       <ul class="apps" role="list">
         {

@@ -4,7 +4,7 @@ import Icon from './Icon.astro';
 import { visibleApps } from '../data/apps';
 import { site } from '../data/site';
 import type { Lang } from '../data/types';
-import { localizePath, otherLang, useTranslations } from '../i18n';
+import { LANG_NAMES, localizePath, otherLangs, useTranslations } from '../i18n';
 
 interface Props {
   lang: Lang;
@@ -13,7 +13,6 @@ interface Props {
 
 const { lang, path } = Astro.props;
 const t = useTranslations(lang);
-const alt = otherLang(lang);
 const year = new Date().getFullYear();
 ---
 
@@ -52,7 +51,15 @@ const year = new Date().getFullYear();
         <li><a href={localizePath('/legal/', lang)}>{t('footer.legal')}</a></li>
         <li><a href={`mailto:${site.email}`}>{t('nav.contact')}</a></li>
         <li><a href={site.github} target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href={localizePath(path, alt)} hreflang={alt} lang={alt}>{t('nav.switch')}</a></li>
+        {
+          otherLangs(lang).map((code) => (
+            <li>
+              <a href={localizePath(path, code)} hreflang={code} lang={code}>
+                {LANG_NAMES[code]}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </nav>
   </div>

@@ -1,21 +1,21 @@
 # Benjamin Blériot — apps iPhone
 
 Portfolio et pages officielles des apps iOS de Benjamin Blériot : présentation,
-confidentialité, conditions d’utilisation et assistance, en français et en anglais.
+confidentialité, conditions d’utilisation et assistance, en français, en anglais et en allemand.
 
 Site statique généré avec [Astro](https://astro.build), publié sur GitHub Pages :
 **https://benjamin-bleriot.github.io**
 
 ## Adresses
 
-Chaque app dispose de quatre pages, en français et en anglais (préfixe `/en/`) :
+Chaque app dispose de quatre pages, en français, en anglais (préfixe `/en/`) et en allemand (préfixe `/de/`) :
 
-| Page | Français | Anglais |
-| --- | --- | --- |
-| Présentation | `/flipseven/` | `/en/flipseven/` |
-| Confidentialité | `/flipseven/privacy/` | `/en/flipseven/privacy/` |
-| Conditions d’utilisation | `/flipseven/terms/` | `/en/flipseven/terms/` |
-| Assistance | `/flipseven/support/` | `/en/flipseven/support/` |
+| Page | Français | Anglais | Allemand |
+| --- | --- | --- | --- |
+| Présentation | `/flipseven/` | `/en/flipseven/` | `/de/flipseven/` |
+| Confidentialité | `/flipseven/privacy/` | `/en/flipseven/privacy/` | `/de/flipseven/privacy/` |
+| Conditions d’utilisation | `/flipseven/terms/` | `/en/flipseven/terms/` | `/de/flipseven/terms/` |
+| Assistance | `/flipseven/support/` | `/en/flipseven/support/` | `/de/flipseven/support/` |
 
 Apps : `skyjo`, `flipseven`, `jogr`, `budgy`, `lumi` (bientôt).
 Mentions légales : `/legal/`. Des raccourcis redirigent aussi vers la bonne page
@@ -24,7 +24,7 @@ Mentions légales : `/legal/`. Des raccourcis redirigent aussi vers la bonne pag
 ### À renseigner dans App Store Connect
 
 App Store Connect accepte une URL par langue : utilisez la version française pour le
-français et la version `/en/` pour les autres langues.
+français, la version `/de/` pour l’allemand et la version `/en/` pour les autres langues.
 
 | App | Politique de confidentialité | Assistance |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ Chaque app déclare ce qu’elle fait réellement dans `privacy.practices` :
 | `speech` | Lecture à voix haute par les voix d’iOS |
 | `external-links` | Liens vers des sites externes |
 
-La politique est alors rédigée automatiquement en français et en anglais. Pensez à
+La politique est alors rédigée automatiquement en français, en anglais et en allemand. Pensez à
 mettre à jour `privacy.updated` à chaque changement, et à ajouter la pratique
 correspondante avant de publier une nouvelle fonction (par exemple `camera-pcc` pour
 Skyjo Keeper le jour où le calcul du score par photo sort).
@@ -113,7 +113,7 @@ chaque lundi : les notes et versions restent à jour sans intervention. Les imag
 sont versionnées : relancez `npm run appstore:images` puis commitez après avoir changé
 les captures sur l’App Store.
 
-L’image de partage de l’accueil (`public/og.png`, `public/og-en.png`) se régénère avec
+L’image de partage de l’accueil (`public/og.png`, `og-en.png`, `og-de.png`) se régénère avec
 `python3 scripts/og.py` (nécessite Pillow).
 
 ## Déploiement

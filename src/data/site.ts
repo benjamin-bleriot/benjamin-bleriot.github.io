@@ -12,6 +12,7 @@ export const site = {
   role: {
     fr: 'Développeur iOS',
     en: 'iOS developer',
+    de: 'iOS-Entwickler',
   } satisfies Text,
   stack: ['Swift', 'SwiftUI', 'SwiftData', 'CloudKit', 'StoreKit', 'Foundation Models', 'Kotlin', 'Jetpack Compose'],
 };
@@ -26,20 +27,22 @@ export const projects: {
 }[] = [
   {
     name: 'Komoot → GPX',
-    kind: { fr: 'Outil web', en: 'Web tool' },
+    kind: { fr: 'Outil web', en: 'Web tool', de: 'Web-Tool' },
     description: {
       fr: 'Collez le lien d’un itinéraire Komoot public et récupérez son fichier GPX. Sans serveur, sans collecte de données.',
       en: 'Paste a public Komoot route link and download its GPX file. No server, no data collected.',
+      de: 'Füge den Link einer öffentlichen Komoot-Route ein und lade ihre GPX-Datei herunter. Ohne Server, ohne Datenerfassung.',
     },
     url: 'https://benjamin-bleriot.github.io/komoot-to-gpx/',
     repo: 'https://github.com/benjamin-bleriot/komoot-to-gpx',
   },
   {
     name: 'Komoot Private GPX Export',
-    kind: { fr: 'Extension Chrome', en: 'Chrome extension' },
+    kind: { fr: 'Extension Chrome', en: 'Chrome extension', de: 'Chrome-Erweiterung' },
     description: {
       fr: 'Ajoute un bouton « Exporter en GPX » aux tours Komoot que votre compte peut exporter, y compris vos tours privés.',
       en: 'Adds an “Export GPX” button to the Komoot tours your account can export, including your private tours.',
+      de: 'Fügt den Komoot-Touren, die dein Konto exportieren darf, eine Schaltfläche „Als GPX exportieren“ hinzu – auch deinen privaten Touren.',
     },
     url: 'https://github.com/benjamin-bleriot/komoot-private-gpx-extension',
     repo: 'https://github.com/benjamin-bleriot/komoot-private-gpx-extension',

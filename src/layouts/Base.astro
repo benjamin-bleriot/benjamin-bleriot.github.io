@@ -8,7 +8,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
 import type { AppData, Lang } from '../data/types';
-import { htmlLang, localizePath, otherLang, useTranslations } from '../i18n';
+import { htmlLang, LANGS, localizePath, otherLangs, useTranslations } from '../i18n';
 import { themeStyle } from '../lib/apps';
 
 interface Props {
@@ -30,8 +30,8 @@ const t = useTranslations(lang);
 const siteUrl = Astro.site ?? new URL('https://benjamin-bleriot.github.io');
 const url = (target: string) => new URL(target, siteUrl).href;
 const canonical = url(localizePath(path, lang));
-const alternates = { fr: url(localizePath(path, 'fr')), en: url(localizePath(path, 'en')) };
-const ogImage = url(image ?? (lang === 'fr' ? '/og.png' : '/og-en.png'));
+const alternate = (code: Lang) => url(localizePath(path, code));
+const ogImage = url(image ?? (lang === 'fr' ? '/og.png' : `/og-${lang}.png`));
 ---
 
 <!doctype html>
@@ -44,9 +44,8 @@ const ogImage = url(image ?? (lang === 'fr' ? '/og.png' : '/og-en.png'));
     <meta name="author" content={site.author} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="fr" href={alternates.fr} />
-    <link rel="alternate" hreflang="en" href={alternates.en} />
-    <link rel="alternate" hreflang="x-default" href={alternates.fr} />
+    {LANGS.map((code) => <link rel="alternate" hreflang={code} href={alternate(code)} />)}
+    <link rel="alternate" hreflang="x-default" href={alternate('fr')} />
 
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#050507" />
@@ -64,7 +63,7 @@ const ogImage = url(image ?? (lang === 'fr' ? '/og.png' : '/og-en.png'));
     <meta property="og:image" content={ogImage} />
     {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
     <meta property="og:locale" content={t('meta.locale')} />
-    <meta property="og:locale:alternate" content={useTranslations(otherLang(lang))('meta.locale')} />
+    {otherLangs(lang).map((code) => <meta property="og:locale:alternate" content={useTranslations(code)('meta.locale')} />)}
     <meta name="twitter:card" content={largeImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

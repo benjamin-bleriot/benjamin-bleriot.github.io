@@ -9,8 +9,12 @@ interface Props {
 
 const { href, lang, height = 52 } = Astro.props;
 // Badges officiels d'Apple, téléchargés par `npm run appstore:images`.
-const ratio = lang === 'fr' ? 126.50751 / 40 : 119.66407 / 40;
-const alt = lang === 'fr' ? 'Télécharger dans l’App Store' : 'Download on the App Store';
+const badges: Record<Lang, { ratio: number; alt: string }> = {
+  fr: { ratio: 126.50751 / 40, alt: 'Télécharger dans l’App Store' },
+  en: { ratio: 119.66407 / 40, alt: 'Download on the App Store' },
+  de: { ratio: 119.66407 / 40, alt: 'Laden im App Store' },
+};
+const { ratio, alt } = badges[lang];
 ---
 
 <a class="badge" href={href} target="_blank" rel="noopener">

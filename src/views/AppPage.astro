@@ -32,6 +32,7 @@ const path = `/${app.slug}/`;
 const link = (sub: string) => localizePath(`/${app.slug}/${sub}`, lang);
 const notes = data?.locales[lang];
 const others = visibleApps.filter((other) => other.slug !== app.slug);
+const quote = (text: string) => ({ fr: `« ${text} »`, en: `“${text}”`, de: `„${text}“` })[lang];
 
 const schemaCategory: Record<string, string> = {
   Games: 'GameApplication',
@@ -248,11 +249,11 @@ const supportItems = [
                 <Stars value={review.rating} lang={lang} size={15} />
                 <h3>{review.title[lang]}</h3>
                 <blockquote lang={review.original === lang ? undefined : lang}>
-                  <p>{lang === 'fr' ? `« ${review.text[lang]} »` : `“${review.text[lang]}”`}</p>
+                  <p>{quote(review.text[lang])}</p>
                 </blockquote>
                 <p class="review-author">
                   {review.author}
-                  {review.original !== lang && <span> · {t('app.reviews.translated')}</span>}
+                  {review.original !== lang && <span> · {t(review.original === 'fr' ? 'app.reviews.fromFr' : 'app.reviews.fromEn')}</span>}
                 </p>
               </li>
             ))}

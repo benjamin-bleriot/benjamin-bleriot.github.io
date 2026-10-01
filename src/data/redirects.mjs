@@ -1,7 +1,7 @@
 /**
  * Anciennes adresses et raccourcis → nouvelles pages.
  * Chaque alias est décliné automatiquement pour la page de l'app et ses
- * sous-pages (confidentialité, conditions, assistance), en français et en anglais.
+ * sous-pages (confidentialité, conditions, assistance), en français, en anglais et en allemand.
  *
  * ⚠️ N'utilisez jamais le nom d'un dépôt GitHub qui publie son propre site
  * (flip-score, komoot-to-gpx, jogr-ios…) : GitHub Pages le servirait à la place.
@@ -25,7 +25,7 @@ const legacySlugs = {
 };
 
 const subpages = ['', 'privacy/', 'terms/', 'support/'];
-const prefixes = ['', 'en/'];
+const prefixes = ['', 'en/', 'de/'];
 
 export function buildRedirects() {
   /** @type {Record<string, string>} */

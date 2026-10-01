@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Génère les images de partage de la page d'accueil (public/og.png et public/og-en.png).
+Génère les images de partage de la page d'accueil (public/og.png, og-en.png et og-de.png).
 
     python3 scripts/og.py
 
@@ -26,6 +26,7 @@ ICONS = [
 TEXTS = {
     'og.png': ('Des apps iPhone simples,', 'pour les moments qui comptent.', 'Développeur iOS'),
     'og-en.png': ('Simple iPhone apps', 'for the moments that count.', 'iOS developer'),
+    'og-de.png': ('Einfache iPhone-Apps', 'für die Momente, die zählen.', 'iOS-Entwickler'),
 }
 
 

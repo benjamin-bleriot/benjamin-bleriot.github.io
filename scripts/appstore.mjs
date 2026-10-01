@@ -16,10 +16,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEVELOPER_ID = '1812098736';
-/** Boutiques interrogées pour agréger les notes (la première sert aux textes FR, `us` aux textes EN). */
+/** Boutiques interrogées pour agréger les notes (la première sert aux textes FR, `us` aux textes EN, `de` aux textes DE). */
 const STOREFRONTS = ['fr', 'us', 'de', 'gb', 'ca', 'be', 'ch', 'it', 'es', 'nl', 'at', 'lu', 'dk', 'jp', 'au'];
-const LOCALE_STOREFRONT = { fr: 'fr', en: 'us' };
-const BADGE_LOCALES = { fr: 'fr-fr', en: 'en-us' };
+const LOCALE_STOREFRONT = { fr: 'fr', en: 'us', de: 'de' };
+const BADGE_LOCALES = { fr: 'fr-fr', en: 'en-us', de: 'de-de' };
 const SCREENSHOT_WIDTH = 600;
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -96,7 +96,7 @@ async function downloadBadges() {
     const url = `https://toolbox.marketingtools.apple.com/api/badges/download-on-the-app-store/black/${code}?size=250x83`;
     await download(url, join(publicDir, `badge-${locale}.svg`));
   }
-  console.log('  ✓ Badges App Store officiels (fr, en)');
+  console.log(`  ✓ Badges App Store officiels (${Object.keys(BADGE_LOCALES).join(', ')})`);
 }
 
 async function main() {

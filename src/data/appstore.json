@@ -1,6 +1,6 @@
 {
   "developerId": "1812098736",
-  "fetchedAt": "2026-09-29T19:33:17.007Z",
+  "fetchedAt": "2026-10-01T20:27:53.715Z",
   "apps": {
     "6754793003": {
       "bundleId": "com.benjaminbleriot.skyjokeeper",
@@ -93,6 +93,15 @@
           "price": 0,
           "formattedPrice": "Free",
           "url": "https://apps.apple.com/us/app/skyjo-score-keeper/id6754793003"
+        },
+        "de": {
+          "name": "Skyjo – Punkteblock",
+          "version": "1.5.0",
+          "releaseNotes": "What's new in this version\n\n• Added support for the Japanese variant\n• Improved stability and performance\n• Minor bug fixes\n\nThanks for your support and enjoy your games!",
+          "currentVersionReleaseDate": "2026-06-16T22:06:04Z",
+          "price": 0,
+          "formattedPrice": "Gratis",
+          "url": "https://apps.apple.com/de/app/skyjo-punkteblock/id6754793003"
         }
       }
     },
@@ -110,20 +119,20 @@
       "genre": "Games",
       "fileSizeBytes": 12435456,
       "rating": {
-        "average": 4.68,
-        "count": 200,
+        "average": 4.685,
+        "count": 203,
         "storefronts": {
           "fr": {
-            "average": 4.737,
-            "count": 76
+            "average": 4.74,
+            "count": 77
           },
           "us": {
             "average": 4.683,
             "count": 41
           },
           "de": {
-            "average": 4.5,
-            "count": 54
+            "average": 4.518,
+            "count": 56
           },
           "gb": {
             "average": 5,
@@ -181,6 +190,15 @@
           "price": 0,
           "formattedPrice": "Free",
           "url": "https://apps.apple.com/us/app/flip-score-tracker/id6760317673"
+        },
+        "de": {
+          "name": "Flip - Punktezähler",
+          "version": "1.7.0",
+          "releaseNotes": "Neuigkeiten:\n- Der Punkteverlauf ist da! Sehen Sie sich jede Runde und die gespielten Karten an. Halten Sie die Karte gedrückt, um den Punktestand zu bearbeiten oder zu löschen.\n- Fügen Sie Spieler dank gespeicherter Namen schneller hinzu, profitieren Sie von einer übersichtlicheren Rangliste und nutzen Sie die App auf Französisch, Italienisch oder Spanisch.\n\nFür Verbesserungsvorschläge oder bei Problemen können Sie mir eine E-Mail an benjamin.bleriot.pro@gmail.com senden.",
+          "currentVersionReleaseDate": "2026-08-27T16:35:20Z",
+          "price": 0,
+          "formattedPrice": "Gratis",
+          "url": "https://apps.apple.com/de/app/flip-punktez%C3%A4hler/id6760317673"
         }
       }
     },
@@ -244,6 +262,15 @@
           "price": 0,
           "formattedPrice": "Free",
           "url": "https://apps.apple.com/us/app/race-run-tracker-jogr/id6745412690"
+        },
+        "de": {
+          "name": "Plane deine Läufe - Jogr",
+          "version": "1.4.5",
+          "releaseNotes": "We fixed an issue where the trail type you selected when creating a race was not being saved correctly.",
+          "currentVersionReleaseDate": "2026-03-20T16:48:36Z",
+          "price": 0,
+          "formattedPrice": "Gratis",
+          "url": "https://apps.apple.com/de/app/plane-deine-l%C3%A4ufe-jogr/id6745412690"
         }
       }
     },
@@ -292,6 +319,15 @@
           "price": 0,
           "formattedPrice": "Free",
           "url": "https://apps.apple.com/us/app/spending-tracker-budgy/id6762646444"
+        },
+        "de": {
+          "name": "Spending tracker - Budgy",
+          "version": "1.1.0",
+          "releaseNotes": "This update includes performance improvements and several fixes to make Budgy even smoother to use.",
+          "currentVersionReleaseDate": "2026-05-19T04:58:50Z",
+          "price": 0,
+          "formattedPrice": "Gratis",
+          "url": "https://apps.apple.com/de/app/spending-tracker-budgy/id6762646444"
         }
       }
     }
