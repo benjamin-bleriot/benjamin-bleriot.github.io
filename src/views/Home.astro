@@ -105,6 +105,10 @@ const jsonLd = [
   <!-- ─────────────────────────────── Apps -->
   <section class="section" id="apps">
     <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{t('home.apps.eyebrow')}</p>
+      </header>
+
       <div class="app-grid">
         {liveApps.map((app) => <AppCard app={app} lang={lang} />)}
       </div>
