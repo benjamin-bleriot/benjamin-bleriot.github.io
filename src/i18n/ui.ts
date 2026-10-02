@@ -13,7 +13,7 @@ export const ui = {
     'nav.download': 'Télécharger',
     'nav.language': 'Langue',
 
-    'home.title': 'Benjamin Blériot — Apps iPhone',
+    'home.title': 'Benjamin Blériot - Indie App Developer',
     'home.description':
       'Des apps iPhone simples et soignées : Skyjo Keeper, Flip, Jogr, Budgy… Sans compte, sans publicité, respectueuses de votre vie privée.',
     'home.badge': '{n} apps sur l’App Store',
@@ -180,7 +180,7 @@ export const ui = {
     'nav.download': 'Download',
     'nav.language': 'Language',
 
-    'home.title': 'Benjamin Blériot — iPhone apps',
+    'home.title': 'Benjamin Blériot - Indie App Developer',
     'home.description':
       'Simple, well-crafted iPhone apps: Skyjo Keeper, Flip, Jogr, Budgy… No account, no ads, privacy-friendly.',
     'home.badge': '{n} apps on the App Store',
@@ -347,7 +347,7 @@ export const ui = {
     'nav.download': 'Laden',
     'nav.language': 'Sprache',
 
-    'home.title': 'Benjamin Blériot — iPhone-Apps',
+    'home.title': 'Benjamin Blériot - Indie App Developer',
     'home.description':
       'Einfache, sorgfältig gestaltete iPhone-Apps: Skyjo Keeper, Flip, Jogr, Budgy … Ohne Konto, ohne Werbung, mit Respekt für deine Privatsphäre.',
     'home.badge': '{n} Apps im App Store',
