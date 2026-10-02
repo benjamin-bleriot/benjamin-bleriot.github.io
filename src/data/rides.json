@@ -1,1 +1,7 @@
-{}
+{
+  "2026-10-01-sortie-gravel": {
+    "name": "Sortie gravel",
+    "type": "gravel",
+    "rating": 3
+  }
+}
