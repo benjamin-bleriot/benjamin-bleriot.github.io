@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "appstore": "node scripts/appstore.mjs",
     "appstore:images": "node scripts/appstore.mjs --images",
+    "rides:add": "node scripts/rides.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -17,10 +18,12 @@
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/nunito": "^5.3.0",
-    "astro": "^7.3.5"
+    "astro": "^7.3.5",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@types/leaflet": "^1.9.22",
     "typescript": "^5.9.3"
   },
   "engines": {

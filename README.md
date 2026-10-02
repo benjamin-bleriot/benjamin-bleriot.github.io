@@ -116,6 +116,30 @@ les captures sur l’App Store.
 L’image de partage de l’accueil (`public/og.png`, `og-en.png`, `og-de.png`) se régénère avec
 `python3 scripts/og.py` (nécessite Pillow).
 
+## Page privée `/rides/`
+
+Carte de mes sorties vélo et gravel, absente de la navigation, du plan du site et des
+moteurs de recherche (`noindex`). Elle reste néanmoins publique pour qui connaît l’adresse,
+tout comme les fichiers GPX du dépôt.
+
+```bash
+npm run rides:add -- ~/Downloads/sortie.gpx                 # gravel par défaut selon le GPX
+npm run rides:add -- sortie.gpx --type route --name "Nom"   # gravel, route, vtt ou velo
+npm run rides:add -- sortie.gpx --trim 800                  # zone masquée au départ et à l’arrivée
+```
+
+Le script copie la trace dans `public/rides/gpx/` en retirant les 400 premiers et derniers
+mètres (`--trim`, 0 pour tout garder) afin de ne pas révéler le point de départ, puis
+l’ajoute à `src/data/rides.json` (nom, type, note sur 5, commentaire). Distance, dénivelés,
+pentes et temps sont calculés à la compilation.
+
+Sur la page, la note et le commentaire se modifient directement ; ils sont gardés sur
+l’appareil jusqu’à ce que **Exporter rides.json** télécharge le fichier à remplacer dans
+`src/data/`. Un GPX déposé sur la carte (ou ouvert avec +) s’affiche sans être enregistré.
+
+Les fonds de carte (OpenStreetMap, CyclOSM, OpenTopoMap, Esri) sont chargés depuis leurs
+serveurs : c’est la seule page du site qui fait appel à des ressources externes.
+
 ## Déploiement
 
 Chaque push sur `main` déclenche `.github/workflows/deploy.yml`, qui compile le site et
@@ -133,4 +157,4 @@ fournie par GitHub Pages.
 ## Confidentialité du site
 
 Aucun cookie, aucune mesure d’audience, aucune ressource externe : les polices et les
-images sont servies par le site lui-même.
+images sont servies par le site lui-même (seule exception : les fonds de carte de `/rides/`).

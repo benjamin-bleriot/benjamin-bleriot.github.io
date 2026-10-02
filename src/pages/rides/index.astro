@@ -1,0 +1,837 @@
+---
+/*
+ * Page privée : carte de mes sorties vélo et gravel.
+ * Volontairement absente de la navigation, du plan du site et des moteurs de recherche.
+ * Ajouter une sortie : npm run rides:add -- chemin/vers/sortie.gpx
+ */
+import '@fontsource-variable/inter';
+import '@fontsource-variable/nunito';
+import '../../styles/global.css';
+import 'leaflet/dist/leaflet.css';
+import { loadRides } from '../../lib/rides';
+
+const summaries = loadRides().map((ride) => ride.summary);
+const data = JSON.stringify(summaries).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Mes sorties</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#050507" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="rides-page">
+    <div class="layout">
+      <div id="map" class="map" aria-label="Carte des sorties"></div>
+
+      <div class="layers glass" role="radiogroup" aria-label="Fond de carte" id="layers"></div>
+
+      <aside class="panel glass" id="panel">
+        <!-- Vue d'ensemble -->
+        <section class="view" id="list-view">
+          <header class="head">
+            <div>
+              <p class="eyebrow-s">Journal de bord</p>
+              <h1>Mes sorties</h1>
+            </div>
+            <label class="icon-btn" title="Ouvrir un GPX">
+              <input type="file" accept=".gpx,application/gpx+xml" id="file-input" multiple hidden />
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+              <span class="visually-hidden">Ouvrir un GPX</span>
+            </label>
+          </header>
+
+          <dl class="totals" id="totals"></dl>
+
+          <div class="filters">
+            <div class="chips" id="type-filters" role="group" aria-label="Type de sortie"></div>
+            <div class="row">
+              <input class="search" id="search" type="search" placeholder="Rechercher…" autocomplete="off" />
+              <select class="sort" id="sort" aria-label="Trier">
+                <option value="date">Plus récentes</option>
+                <option value="rating">Mieux notées</option>
+                <option value="distance">Plus longues</option>
+                <option value="gain">Plus de D+</option>
+              </select>
+            </div>
+          </div>
+
+          <ol class="list" id="list" role="list"></ol>
+
+          <div class="empty" id="empty" hidden>
+            <p><strong>Aucune sortie pour l’instant.</strong></p>
+            <p>Déposez un fichier GPX sur la carte pour l’afficher, ou ajoutez-le au site :</p>
+            <code>npm run rides:add -- sortie.gpx</code>
+          </div>
+
+          <footer class="foot" id="export-bar" hidden>
+            <span id="export-count"></span>
+            <button class="link-btn" id="export">Exporter rides.json</button>
+          </footer>
+        </section>
+
+        <!-- Détail d'une sortie -->
+        <section class="view" id="detail-view" hidden>
+          <button class="back" id="back">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+            Toutes les sorties
+          </button>
+          <p class="meta" id="d-meta"></p>
+          <h2 id="d-name"></h2>
+          <div class="rating" id="d-rating" role="radiogroup" aria-label="Note"></div>
+          <dl class="stats" id="d-stats"></dl>
+          <label class="note">
+            <span>Notes</span>
+            <textarea id="d-note" rows="3" placeholder="Surface, ravito, passages à éviter…"></textarea>
+          </label>
+          <p class="local-hint" id="d-local" hidden>
+            Aperçu local : ajoutez ce fichier avec <code>npm run rides:add</code> pour le garder et le noter.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary btn-sm" id="d-download" download>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
+              Télécharger le GPX
+            </a>
+            <button class="btn btn-ghost btn-sm" id="d-fit">Recentrer</button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="profile glass" id="profile" hidden aria-label="Profil altimétrique">
+        <header>
+          <p class="readout" id="readout"></p>
+          <ul class="legend" role="list" id="legend"></ul>
+        </header>
+        <div class="chart" id="chart"></div>
+      </section>
+
+      <div class="drop" id="drop" hidden>
+        <p>Déposez un GPX pour l’afficher</p>
+      </div>
+    </div>
+
+    <script type="application/json" id="rides-data" set:html={data} />
+    <script>
+      import '../../scripts/rides';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .rides-page {
+    overflow: hidden;
+    font-size: 15px;
+  }
+
+  .rides-page .layout {
+    position: relative;
+    height: 100dvh;
+  }
+
+  .rides-page .map {
+    position: absolute;
+    inset: 0;
+    background: #0b0b0e;
+  }
+
+  /* ------------------------------------------------------------ Panneau */
+
+  .rides-page .panel {
+    position: absolute;
+    z-index: 500;
+    top: 16px;
+    left: 16px;
+    bottom: 16px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+
+  .rides-page .view {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .rides-page .view[hidden] {
+    display: none;
+  }
+
+  .rides-page .head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .rides-page h1 {
+    font-size: 30px;
+  }
+
+  .rides-page h2 {
+    font-size: 24px;
+    margin-top: -8px;
+  }
+
+  .rides-page .eyebrow-s,
+  .rides-page .meta {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .rides-page .meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rides-page .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .rides-page .icon-btn:hover {
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  .rides-page :is(.icon-btn, .back, .btn) svg path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .rides-page .icon-btn svg,
+  .rides-page .back svg,
+  .rides-page .btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Totaux */
+  .rides-page .totals {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin: 0;
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    background: var(--line);
+  }
+
+  .rides-page .totals div {
+    padding: 10px 8px;
+    background: rgb(12 12 16 / 0.6);
+    text-align: center;
+  }
+
+  .rides-page dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .rides-page dd small {
+    margin-left: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+
+  .rides-page dt {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  /* Filtres */
+  .rides-page .filters {
+    display: grid;
+    gap: 10px;
+  }
+
+  .rides-page .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .rides-page .chips button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text-2);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .rides-page .chips button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--ink-text);
+    border-color: transparent;
+  }
+
+  .rides-page .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c);
+    flex: none;
+  }
+
+  .rides-page .row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .rides-page .search,
+  .rides-page .sort,
+  .rides-page textarea {
+    min-width: 0;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: rgb(0 0 0 / 0.25);
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+  }
+
+  .rides-page .search {
+    flex: 1;
+  }
+
+  .rides-page :is(.search, .sort, textarea):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  /* Liste */
+  .rides-page .list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rides-page .ride {
+    display: grid;
+    grid-template-columns: 4px 1fr;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 12px 10px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    background: var(--card);
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      transform 0.2s var(--ease);
+  }
+
+  .rides-page .ride:hover,
+  .rides-page .ride.hover {
+    background: rgb(255 255 255 / 0.08);
+    border-color: var(--line-strong);
+  }
+
+  .rides-page .ride .bar {
+    border-radius: 4px;
+    background: var(--c);
+  }
+
+  .rides-page .ride .top {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .rides-page .ride strong {
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .rides-page .ride .date {
+    font-size: 12px;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+
+  .rides-page .ride .figures {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rides-page .ride svg.spark {
+    width: 100%;
+    height: 28px;
+    margin-top: 8px;
+  }
+
+  .rides-page .mini-stars {
+    color: var(--star);
+    letter-spacing: 1px;
+  }
+
+  .rides-page .badge {
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--c) 22%, transparent);
+    color: var(--c);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .rides-page .empty {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-s);
+    color: var(--text-2);
+    font-size: 14px;
+  }
+
+  .rides-page .empty[hidden] {
+    display: none;
+  }
+
+  .rides-page code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--text);
+  }
+
+  .rides-page .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .rides-page .foot[hidden] {
+    display: none;
+  }
+
+  .rides-page .link-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--star);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Détail */
+  .rides-page .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    margin-left: -6px;
+    padding: 4px 8px 4px 2px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--text-2);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .rides-page .back:hover {
+    color: var(--text);
+  }
+
+  .rides-page .rating {
+    display: flex;
+    gap: 2px;
+    margin-top: -6px;
+  }
+
+  .rides-page .rating button {
+    padding: 2px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: color-mix(in srgb, var(--text-3) 45%, transparent);
+    transition: transform 0.15s var(--ease), color 0.15s;
+  }
+
+  .rides-page .rating button.on {
+    color: var(--star);
+  }
+
+  .rides-page .rating button:hover {
+    transform: scale(1.15);
+  }
+
+  .rides-page .rating svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .rides-page .rating svg path {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .rides-page .rating:has(button:disabled) {
+    display: none;
+  }
+
+  .rides-page .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin: 0;
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    background: var(--line);
+  }
+
+  .rides-page .stats div {
+    padding: 12px 10px;
+    background: rgb(12 12 16 / 0.6);
+  }
+
+  .rides-page .stats dd {
+    font-size: 20px;
+  }
+
+  .rides-page .note {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .rides-page .note:has(textarea:disabled) {
+    display: none;
+  }
+
+  .rides-page textarea {
+    resize: vertical;
+    line-height: 1.45;
+  }
+
+  .rides-page .local-hint {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .rides-page .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ------------------------------------------------------- Fonds de carte */
+
+  .rides-page .layers {
+    position: absolute;
+    z-index: 500;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+  }
+
+  .rides-page .layers button {
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: var(--text-2);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .rides-page .layers button[aria-checked='true'] {
+    background: rgb(255 255 255 / 0.14);
+    color: var(--text);
+  }
+
+  /* ------------------------------------------------------------ Profil */
+
+  .rides-page .profile {
+    position: absolute;
+    z-index: 500;
+    left: 412px;
+    right: 16px;
+    bottom: 16px;
+    padding: 12px 16px 8px;
+    border-radius: var(--radius-m);
+  }
+
+  .rides-page .profile[hidden] {
+    display: none;
+  }
+
+  .rides-page .profile header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 22px;
+  }
+
+  .rides-page .readout {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rides-page .readout b {
+    color: var(--text);
+  }
+
+  .rides-page .legend {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .rides-page .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .rides-page .chart {
+    position: relative;
+    height: 140px;
+    margin-top: 6px;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .rides-page .chart svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .rides-page .chart text {
+    fill: var(--text-3);
+    font-size: 10.5px;
+    font-family: var(--font-body);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ------------------------------------------------------------ Dépôt */
+
+  .rides-page .drop {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    background: rgb(5 5 7 / 0.6);
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+  }
+
+  .rides-page .drop[hidden] {
+    display: none;
+  }
+
+  .rides-page .drop p {
+    padding: 28px 40px;
+    border: 2px dashed var(--line-strong);
+    border-radius: var(--radius-l);
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  /* ------------------------------------------------------------ Leaflet */
+
+  .rides-page .leaflet-container {
+    font: inherit;
+    background: #0b0b0e;
+  }
+
+  /* Fond sombre : tuiles OpenStreetMap inversées. */
+  .rides-page .tiles-dark {
+    filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.35);
+  }
+
+  .rides-page .leaflet-control-attribution {
+    background: rgb(5 5 7 / 0.6) !important;
+    color: var(--text-3);
+    font-size: 10px;
+  }
+
+  .rides-page .leaflet-control-attribution a {
+    color: var(--text-2);
+  }
+
+  .rides-page .leaflet-bar a {
+    background: rgb(24 24 30 / 0.85);
+    border-color: var(--line) !important;
+    color: var(--text);
+  }
+
+  .rides-page .leaflet-bar a:hover {
+    background: rgb(40 40 48 / 0.95);
+  }
+
+  .rides-page .leaflet-bar {
+    border: 1px solid var(--glass-line) !important;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Échelle et crédits au-dessus du profil quand il est affiché. */
+  .rides-page .layout:has(.profile:not([hidden])) .leaflet-bottom.leaflet-right {
+    bottom: 214px;
+  }
+
+  .rides-page .leaflet-top.leaflet-right {
+    top: 56px;
+  }
+
+  .rides-page .leaflet-tooltip.ride-tip {
+    padding: 5px 10px;
+    border: 1px solid var(--glass-line);
+    border-radius: 10px;
+    background: rgb(18 18 24 / 0.92);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .rides-page .leaflet-tooltip.ride-tip::before {
+    display: none;
+  }
+
+  .rides-page .pin {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.6);
+  }
+
+  .rides-page .pin.start {
+    background: #34c77b;
+  }
+
+  .rides-page .pin.end {
+    background: repeating-conic-gradient(#111 0 25%, #fff 0 50%) 50% / 8px 8px;
+  }
+
+  /* ------------------------------------------------------------ Mobile */
+
+  @media (max-width: 760px) {
+    .rides-page {
+      overflow: auto;
+    }
+
+    .rides-page .layout {
+      height: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rides-page .map {
+      position: relative;
+      inset: auto;
+      height: 56dvh;
+      flex: none;
+    }
+
+    .rides-page .layers {
+      top: 12px;
+      right: 12px;
+    }
+
+    .rides-page .profile {
+      position: relative;
+      inset: auto;
+      order: 1;
+      margin: -24px 12px 0;
+    }
+
+    .rides-page .panel {
+      position: relative;
+      inset: auto;
+      order: 2;
+      width: auto;
+      margin: 12px;
+    }
+
+    .rides-page .view {
+      overflow: visible;
+    }
+
+    .rides-page .legend {
+      display: none;
+    }
+
+    .rides-page .layout:has(.profile:not([hidden])) .leaflet-bottom.leaflet-right {
+      bottom: 24px;
+    }
+  }
+</style>

@@ -15,6 +15,8 @@ export default defineConfig({
   redirects: buildRedirects(),
   integrations: [
     sitemap({
+      // /rides/ est une page privée : hors du plan du site.
+      filter: (page) => !new URL(page).pathname.startsWith('/rides/'),
       i18n: {
         defaultLocale: 'fr',
         locales: { fr: 'fr-FR', en: 'en-US', de: 'de-DE' },
