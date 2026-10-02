@@ -1,4 +1,8 @@
 {
+  "2026-07-22-bords-de-marne": {
+    "name": "Bords de Marne",
+    "type": "gravel"
+  },
   "2026-10-01-sortie-gravel": {
     "name": "Sortie gravel",
     "type": "gravel",
