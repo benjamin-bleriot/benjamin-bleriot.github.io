@@ -35,6 +35,15 @@ const GRADES = [
   { max: 12, color: '#ff5a4f', label: '9–12' },
   { max: Infinity, color: '#d64ad6', label: '> 12 %' },
 ];
+// Une couleur par trace, attribuée dans l'ordre chronologique pour rester stable quand de nouvelles sorties s'ajoutent.
+const PALETTE = ['#f2a65a', '#5ea8ff', '#34c77b', '#ff6b9d', '#b48cff', '#2fd4d4', '#ffd23f', '#ff5a4f', '#8fd14f', '#e07bff'];
+const colors = new Map<string, string>();
+function assignColors(list: Ride[]) {
+  const fresh = list.filter((r) => !colors.has(r.slug)).sort((a, b) => (a.stats.start ?? '').localeCompare(b.stats.start ?? ''));
+  for (const ride of fresh) colors.set(ride.slug, PALETTE[colors.size % PALETTE.length]!);
+}
+const rideColor = (ride: Ride) => colors.get(ride.slug) ?? TYPES[ride.type].color;
+
 const gradeBucket = (g: number) => GRADES.findIndex((b) => g < b.max);
 
 const nf = (digits = 0) => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -78,6 +87,7 @@ const isMobile = () => matchMedia('(max-width: 760px)').matches;
 /* ------------------------------------------------------------------ Données */
 
 const rides: Ride[] = JSON.parse($('rides-data').textContent || '[]');
+assignColors(rides);
 const base = new Map(rides.map((r) => [r.slug, { rating: r.rating, note: r.note }]));
 
 // Notes modifiées sur cet appareil, en attente d'export vers src/data/rides.json.
@@ -152,7 +162,7 @@ const overviewGroup = L.featureGroup().addTo(map);
 function addOverview(ride: Ride) {
   const coords: L.LatLngTuple[] = [];
   for (let i = 0; i < ride.overview.length; i += 2) coords.push([ride.overview[i]!, ride.overview[i + 1]!]);
-  const line = L.polyline(coords, { color: TYPES[ride.type].color, weight: 3, opacity: 0.9, lineJoin: 'round' });
+  const line = L.polyline(coords, { color: rideColor(ride), weight: 3, opacity: 0.9, lineJoin: 'round' });
   line.bindTooltip(escape(ride.name), { sticky: true, className: 'ride-tip', direction: 'top', offset: [0, -8] });
   line.on('mouseover', () => highlight(ride.slug, true));
   line.on('mouseout', () => highlight(ride.slug, false));
@@ -230,7 +240,7 @@ function renderList() {
   const list = sorted(rides.filter(matches));
   $('list').innerHTML = list
     .map((ride) => {
-      const color = TYPES[ride.type].color;
+      const color = rideColor(ride);
       return `<li><button class="ride" data-slug="${escape(ride.slug)}" style="--c:${color}">
         <span class="bar"></span>
         <span>
@@ -383,7 +393,7 @@ function drawTrack(ride: Ride, track: RideTrack) {
       start = i;
     }
   } else {
-    L.polyline(coords, { color: TYPES[ride.type].color, weight: 4.5, interactive: false }).addTo(detailLayer);
+    L.polyline(coords, { color: rideColor(ride), weight: 4.5, interactive: false }).addTo(detailLayer);
   }
 
   const hit = L.polyline(coords, { weight: 26, opacity: 0, color: '#000' }).addTo(detailLayer);
@@ -641,6 +651,7 @@ async function openFiles(files: FileList | File[]) {
       local: true,
     };
     rides.push(ride);
+    assignColors([ride]);
     addOverview(ride);
     last = ride;
   }
