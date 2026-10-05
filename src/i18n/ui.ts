@@ -17,10 +17,10 @@ export const ui = {
     'home.description':
       'Des apps iPhone simples et soignées : Skyjo Keeper, Flip, Jogr, Budgy… Sans compte, sans publicité, respectueuses de votre vie privée.',
     'home.badge': '{n} apps sur l’App Store',
-    'home.title1': 'Des apps iPhone simples,',
-    'home.title2': 'pour les moments qui comptent.',
+    'home.title1': 'Des applications',
+    'home.title2': 'conçues avec soin.',
     'home.lead':
-      'Je suis Benjamin Blériot, développeur iOS. Je conçois des apps natives pour vos soirées jeux, votre saison de course ou votre budget. Sans compte, sans publicité, sans pistage.',
+      'Je suis Benjamin Blériot, développeur mobile indépendant. Je conçois et développe des applications natives en Swift et SwiftUI pour iOS, en Kotlin et Jetpack Compose pour Android. Sans compte, sans publicité, sans pistage.',
     'home.cta.apps': 'Découvrir les apps',
     'home.cta.contact': 'Me contacter',
     'home.stats.apps': 'apps publiées',
@@ -184,10 +184,10 @@ export const ui = {
     'home.description':
       'Simple, well-crafted iPhone apps: Skyjo Keeper, Flip, Jogr, Budgy… No account, no ads, privacy-friendly.',
     'home.badge': '{n} apps on the App Store',
-    'home.title1': 'Simple iPhone apps',
-    'home.title2': 'for the moments that count.',
+    'home.title1': 'Apps',
+    'home.title2': 'crafted with care.',
     'home.lead':
-      'I’m Benjamin Blériot, an iOS developer. I build native apps for your game nights, your race season or your budget. No account, no ads, no tracking.',
+      'I’m Benjamin Blériot, an independent mobile developer. I design and build native apps in Swift and SwiftUI for iOS, and in Kotlin and Jetpack Compose for Android. No account, no ads, no tracking.',
     'home.cta.apps': 'Explore the apps',
     'home.cta.contact': 'Get in touch',
     'home.stats.apps': 'apps published',
@@ -351,11 +351,10 @@ export const ui = {
     'home.description':
       'Einfache, sorgfältig gestaltete iPhone-Apps: Skyjo Keeper, Flip, Jogr, Budgy … Ohne Konto, ohne Werbung, mit Respekt für deine Privatsphäre.',
     'home.badge': '{n} Apps im App Store',
-    // Trait d'union insécable : « iPhone‑Apps » ne se coupe pas en fin de ligne.
-    'home.title1': 'Einfache iPhone‑Apps',
-    'home.title2': 'für die Momente, die zählen.',
+    'home.title1': 'Mit Sorgfalt',
+    'home.title2': 'gestaltete Apps.',
     'home.lead':
-      'Ich bin Benjamin Blériot, iOS-Entwickler. Ich entwickle native Apps für deine Spieleabende, deine Laufsaison oder dein Budget. Ohne Konto, ohne Werbung, ohne Tracking.',
+      'Ich bin Benjamin Blériot, unabhängiger Mobile-Entwickler. Ich entwickle native Apps in Swift und SwiftUI für iOS sowie in Kotlin und Jetpack Compose für Android. Ohne Konto, ohne Werbung, ohne Tracking.',
     'home.cta.apps': 'Apps entdecken',
     'home.cta.contact': 'Kontakt aufnehmen',
     'home.stats.apps': 'veröffentlichte Apps',
