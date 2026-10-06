@@ -24,6 +24,7 @@ export const places: Place[] = [
   { name: 'Faro', country: 'PT', lat: 37.0194, lon: -7.9304 },
   { name: 'Santiago', country: 'CL', lat: -33.4378, lon: -70.6504 },
   { name: 'Ushuaia', country: 'AR', lat: -54.8019, lon: -68.303 },
+  { name: 'Perito Moreno', country: 'AR', lat: -46.5921, lon: -70.9257 },
   { name: 'Puerto Natales', country: 'CL', lat: -51.7277, lon: -72.5065 },
   { name: 'Pucón', country: 'CL', lat: -39.2822, lon: -71.9545 },
   { name: 'Oslo', country: 'NO', lat: 59.9139, lon: 10.7522 },
