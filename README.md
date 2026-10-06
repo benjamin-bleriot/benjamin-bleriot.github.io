@@ -55,6 +55,7 @@ Tout le contenu éditable est dans `src/data/` :
 | --- | --- |
 | `apps.ts` | Les apps : textes FR/EN, fonctionnalités, FAQ, avis, tarifs, couleurs, pratiques de données |
 | `site.ts` | Nom, e-mail, liens, boîte à outils, projets open source |
+| `places.ts` | Les endroits visités, affichés sur la page privée `/trip/` |
 | `legal/privacy.ts` | Modèle de politique de confidentialité (assemblé selon les pratiques de chaque app) |
 | `legal/terms.ts` | Modèle de conditions d’utilisation |
 | `redirects.mjs` | Raccourcis et anciennes adresses |
@@ -139,6 +140,26 @@ l’appareil jusqu’à ce que **Exporter rides.json** télécharge le fichier �
 
 Les fonds de carte (OpenStreetMap, CyclOSM, OpenTopoMap, Esri) sont chargés depuis leurs
 serveurs : c’est la seule page du site qui fait appel à des ressources externes.
+
+## Page privée `/trip/`
+
+Planisphère des endroits où je suis allé, absent lui aussi de la navigation, du plan du site
+et des moteurs de recherche (`noindex`), mais public pour qui connaît l’adresse.
+
+Les endroits sont listés dans `src/data/places.ts` : nom, code pays ISO 3166-1
+(`FR`, `IT`, `JP`…) et coordonnées en degrés décimaux.
+
+```ts
+{ name: 'Lisbonne', country: 'PT', lat: 38.7223, lon: -9.1393 },
+```
+
+Le pays se colore automatiquement (deux voisins n’ont jamais la même couleur), et les
+compteurs (pays, villes, continents, part du monde) se recalculent à la compilation. Un code
+pays inconnu interrompt la compilation avec un message explicite.
+
+Le fond de carte (Natural Earth au 1:10 M, via `world-atlas`) est simplifié puis tracé en SVG
+à la compilation : les contours restent fins autour des endroits visités et s’allègent
+ailleurs. La page n’appelle aucune ressource externe.
 
 ## Déploiement
 
