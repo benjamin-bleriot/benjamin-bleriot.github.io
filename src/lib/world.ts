@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { countries as countryList, type TCountryCode } from 'countries-list';
-import { geoArea, geoGraticule, geoNaturalEarth1, geoPath, type GeoContext, type GeoPermissibleObjects } from 'd3-geo';
+import { geoArea, geoDistance, geoGraticule, geoNaturalEarth1, geoPath, type GeoContext, type GeoPermissibleObjects } from 'd3-geo';
 import type { Feature, MultiPolygon, Polygon } from 'geojson';
 import iso from 'i18n-iso-countries';
 import { feature, neighbors } from 'topojson-client';
@@ -60,7 +60,7 @@ export interface TripData {
 const TOPOLOGY = path.join(process.cwd(), 'node_modules/world-atlas/countries-10m.json');
 const WIDTH = 1000;
 
-// Une couleur par pays, dans l'ordre d'apparition dans places.ts ; deux pays voisins n'ont jamais la même.
+// Une couleur par pays, dans l'ordre d'apparition dans places.ts ; deux pays proches n'ont jamais la même.
 const PALETTE = ['#a78bfa', '#2fd4d4', '#5ea8ff', '#34c77b', '#ff6b9d', '#f2a65a', '#ffd23f', '#ff5a4f', '#8fd14f', '#e07bff'];
 
 // Aire minimale des triangles conservés, en stéradians : ≈ 1 km² près des endroits visités
@@ -74,6 +74,9 @@ const NEAR = 4;
 const FAR = 30;
 // Îles de moins de ≈ 80 km² retirées, sauf dans les pays visités.
 const MIN_ISLAND = 2e-6;
+// Deux pays visités sont proches s'ils ont une frontière commune ou des endroits à moins de 1 000 km
+// l'un de l'autre (distance en radians) : on les voit alors ensemble à l'écran.
+const CLOSE = 1000 / 6371;
 // Pays reconnus dans le monde (membres de l'ONU et observateurs), pour le pourcentage.
 const WORLD_COUNTRIES = 195;
 
@@ -229,7 +232,7 @@ export function loadWorld(): WorldMap {
   };
   const height = Math.ceil(measure.bounds(sphere)[1][1]);
 
-  // Couleurs : la suivante de la palette, sauf si un pays voisin déjà coloré l'utilise.
+  // Couleurs : la suivante de la palette, sauf si un pays proche déjà coloré l'utilise.
   const adjacent = new Map<string, Set<string>>();
   neighbors(geometries).forEach((list, i) => {
     const code = codes[i];
@@ -239,11 +242,14 @@ export function loadWorld(): WorldMap {
       if (other && other !== code) adjacent.set(code, (adjacent.get(code) ?? new Set()).add(other));
     }
   });
+  const close = (a: string, b: string) =>
+    !!adjacent.get(a)?.has(b) ||
+    places.some((p) => p.country === a && places.some((q) => q.country === b && geoDistance([p.lon, p.lat], [q.lon, q.lat]) < CLOSE));
   const colors = new Map<string, string>();
   order.forEach((code, i) => {
-    const taken = new Set([...(adjacent.get(code) ?? [])].map((n) => colors.get(n)));
+    const taken = new Set([...colors].filter(([other]) => close(code, other)).map(([, color]) => color));
     let k = i % PALETTE.length;
-    for (let tries = 0; tries < PALETTE.length && taken.has(PALETTE[k]); tries++) k = (k + 1) % PALETTE.length;
+    for (let tries = 0; tries < PALETTE.length && taken.has(PALETTE[k]!); tries++) k = (k + 1) % PALETTE.length;
     colors.set(code, PALETTE[k]!);
   });
 

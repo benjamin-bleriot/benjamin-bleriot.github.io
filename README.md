@@ -153,7 +153,8 @@ Les endroits sont listés dans `src/data/places.ts` : nom, code pays ISO 3166-1
 { name: 'Lisbonne', country: 'PT', lat: 38.7223, lon: -9.1393 },
 ```
 
-Le pays se colore automatiquement (deux voisins n’ont jamais la même couleur), et les
+Le pays se colore automatiquement (deux pays voisins, ou dont des endroits sont à moins de
+1 000 km, n’ont jamais la même couleur), et les
 compteurs (pays, villes, continents, part du monde) se recalculent à la compilation. Un code
 pays inconnu interrompt la compilation avec un message explicite.
 

@@ -169,6 +169,11 @@ const data = JSON.stringify(summaries).replace(/</g, '\\u003c');
     display: none;
   }
 
+  /* Quand le contenu déborde, c'est la vue qui défile : aucun bloc ne doit rétrécir. */
+  .rides-page .view > * {
+    flex: none;
+  }
+
   .rides-page .head {
     display: flex;
     align-items: flex-start;

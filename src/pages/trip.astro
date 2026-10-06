@@ -527,6 +527,11 @@ let lit = 0;
     overscroll-behavior: contain;
   }
 
+  /* Quand la liste déborde, c'est le panneau qui défile : aucun bloc ne doit rétrécir. */
+  .trip-page .panel > * {
+    flex: none;
+  }
+
   .trip-page .eyebrow-s {
     font-size: 12px;
     font-weight: 600;
