@@ -29,6 +29,7 @@ export const places: Place[] = [
   { name: 'Oslo', country: 'NO', lat: 59.9139, lon: 10.7522 },
   { name: 'Dublin', country: 'IE', lat: 53.3498, lon: -6.2603 },
   { name: 'Bruxelles', country: 'BE', lat: 50.8467, lon: 4.3525 },
+  { name: 'Spa', country: 'BE', lat: 50.492, lon: 5.864 },
   { name: 'Cologne', country: 'DE', lat: 50.9413, lon: 6.9583 },
   { name: 'Amsterdam', country: 'NL', lat: 52.3731, lon: 4.8926 },
   { name: 'Genève', country: 'CH', lat: 46.2044, lon: 6.1432 },
