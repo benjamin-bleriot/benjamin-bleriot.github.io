@@ -41,4 +41,5 @@ export const places: Place[] = [
   { name: 'Barcelone', country: 'ES', lat: 41.3874, lon: 2.1686 },
   { name: 'Fuerteventura', country: 'ES', lat: 28.3333, lon: -14.0167 },
   { name: 'Stavanger', country: 'NO', lat: 58.97, lon: 5.7331 },
+  { name: 'Bergen', country: 'NO', lat: 60.3913, lon: 5.3221 },
 ];

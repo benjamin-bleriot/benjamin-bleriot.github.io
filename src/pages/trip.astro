@@ -97,7 +97,6 @@ let lit = 0;
           <div><dt>pays</dt><dd>{stats.countries}</dd></div>
           <div><dt>{plural(stats.places, 'ville')}</dt><dd>{stats.places}</dd></div>
           <div><dt>{plural(stats.continents, 'continent')}</dt><dd>{stats.continents}</dd></div>
-          <div><dt>du monde</dt><dd>{stats.share}<small>%</small></dd></div>
         </dl>
 
         <ol class="list" id="list" role="list">
@@ -547,7 +546,7 @@ let lit = 0;
 
   .trip-page .totals {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     margin: 0;
     border-radius: var(--radius-s);
