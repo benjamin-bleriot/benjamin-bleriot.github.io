@@ -93,7 +93,11 @@ Skyjo Keeper le jour où le calcul du score par photo sort).
    npm run appstore:images
    ```
 3. Choisissez les captures de la carte d’accueil et du haut de page (`shots`).
-4. `npm run dev` pour vérifier, puis poussez sur `main`.
+4. Associez chaque fonctionnalité à sa capture avec `shot` (numéro 1…n) : c’est elle qui
+   s’affiche quand on touche le bloc (par défaut, le bloc n montre la capture n). Si l’ordre
+   des captures change selon la langue, comme pour Jogr, donnez un numéro par langue :
+   `shot: { fr: 5, en: 6, de: 6 }`.
+5. `npm run dev` pour vérifier, puis poussez sur `main`.
 
 Pour une app pas encore publiée, utilisez `status: 'soon'` et placez l’icône dans
 `public/images/apps/<slug>/icon.webp` (+ `icon.png`). `hidden: true` masque une app
@@ -112,7 +116,7 @@ icônes, les captures (FR et EN) et les badges officiels dans `public/appstore/`
 Le déploiement exécute `npm run appstore` automatiquement, et le site est reconstruit
 chaque lundi : les notes et versions restent à jour sans intervention. Les images, elles,
 sont versionnées : relancez `npm run appstore:images` puis commitez après avoir changé
-les captures sur l’App Store.
+les captures sur l’App Store, sans oublier de vérifier les numéros `shot` des fonctionnalités.
 
 L’image de partage de l’accueil (`public/og.png`, `og-en.png`, `og-de.png`) se régénère avec
 `python3 scripts/og.py` (nécessite Pillow).

@@ -1,0 +1,410 @@
+---
+import Icon from './Icon.astro';
+import type { Feature, Lang } from '../data/types';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  features: Feature[];
+  /** Capture de chaque bloc, dans le même ordre (voir featureShots). */
+  shots: string[];
+  name: string;
+  lang: Lang;
+}
+
+const { features, shots, name, lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Une seule image par capture : deux blocs peuvent montrer la même.
+const screens = [...new Set(shots)];
+const screenOf = shots.map((src) => screens.indexOf(src));
+const altOf = (screen: number) =>
+  t('app.shotAlt', {
+    app: name,
+    feature: features
+      .filter((_, index) => screenOf[index] === screen)
+      .map((feature) => feature.title[lang])
+      .join(', '),
+  });
+---
+
+<div class="tour" data-tour>
+  <ul class="cards" role="list">
+    {
+      features.map((feature, index) => (
+        <li class:list={['card', 'tour-card', 'reveal', { 'is-active': index === 0 }]} data-screen={screenOf[index]}>
+          <div class="card-head">
+            <span class="feature-icon">
+              <Icon name={feature.icon} size={19} />
+            </span>
+            <h3>
+              <button
+                type="button"
+                aria-pressed={index === 0 ? 'true' : 'false'}
+                aria-controls="tour-screen"
+                aria-describedby={`tour-text-${index}`}
+              >
+                {feature.title[lang]}
+              </button>
+            </h3>
+          </div>
+          <p id={`tour-text-${index}`}>{feature.text[lang]}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="stage">
+    <div class="frame" id="tour-screen">
+      {
+        screens.map((src, index) => (
+          <img
+            class:list={['screen', { 'is-active': index === screenOf[0] }]}
+            src={src}
+            alt={altOf(index)}
+            width="600"
+            height="1304"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+          />
+        ))
+      }
+    </div>
+    <div class="ticks" aria-hidden="true">
+      {features.map((_, index) => <span class:list={['tick', { 'is-active': index === 0 }]}><span /></span>)}
+    </div>
+  </div>
+</div>
+
+<script>
+  /** Lecture automatique (durée : animation tour-progress), sauf si le visiteur limite les animations. */
+  const autoplay = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  for (const tour of document.querySelectorAll<HTMLElement>('[data-tour]')) {
+    const cards = [...tour.querySelectorAll<HTMLElement>('.tour-card')];
+    const buttons = cards.map((card) => card.querySelector('button')!);
+    const screens = [...tour.querySelectorAll<HTMLElement>('.screen')];
+    const ticks = [...tour.querySelectorAll<HTMLElement>('.tick')];
+    const frame = tour.querySelector<HTMLElement>('.frame')!;
+    let active = 0;
+    let visible = false;
+    let focused = false;
+
+    const select = (index: number) => {
+      active = (index + cards.length) % cards.length;
+      const screen = Number(cards[active].dataset.screen);
+      cards.forEach((card, i) => card.classList.toggle('is-active', i === active));
+      buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === active)));
+      ticks.forEach((tick, i) => tick.classList.toggle('is-active', i === active));
+      screens.forEach((img, i) => {
+        img.classList.toggle('was-active', img.classList.contains('is-active') && i !== screen);
+        img.classList.toggle('is-active', i === screen);
+      });
+    };
+
+    // Dès que le visiteur choisit lui-même, la lecture automatique s'arrête.
+    const choose = (index: number) => {
+      tour.removeAttribute('data-autoplay');
+      select(index);
+    };
+
+    const updatePause = () => tour.classList.toggle('is-paused', !visible || focused);
+
+    buttons.forEach((button, index) =>
+      button.addEventListener('click', () => {
+        choose(index);
+        // Sur mobile, la capture est au-dessus des blocs : on la ramène à l'écran.
+        const box = frame.getBoundingClientRect();
+        if (Math.min(box.bottom, innerHeight) - Math.max(box.top, 0) < box.height * 0.6) {
+          frame.scrollIntoView({ block: 'nearest' });
+        }
+      }),
+    );
+    ticks.forEach((tick, index) => tick.addEventListener('click', () => choose(index)));
+
+    // Balayage horizontal sur la capture.
+    let start: { x: number; y: number } | null = null;
+    frame.addEventListener('pointerdown', (event) => {
+      if (event.button === 0) start = { x: event.clientX, y: event.clientY };
+    });
+    window.addEventListener('pointerup', (event) => {
+      if (!start) return;
+      const dx = event.clientX - start.x;
+      const dy = event.clientY - start.y;
+      start = null;
+      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) choose(active + (dx < 0 ? 1 : -1));
+    });
+    window.addEventListener('pointercancel', () => (start = null));
+
+    if (autoplay) {
+      updatePause();
+      tour.setAttribute('data-autoplay', '');
+      // La barre de progression du bloc actif se remplit, puis passe au suivant.
+      tour.addEventListener('animationend', (event) => {
+        if (tour.hasAttribute('data-autoplay') && (event.target as Element).closest('.tick')) select(active + 1);
+      });
+      // En pause quand la capture n'est pas à l'écran, ou pendant la navigation au clavier.
+      new IntersectionObserver(
+        ([entry]) => {
+          visible = entry.intersectionRatio >= 0.5;
+          updatePause();
+        },
+        { threshold: 0.5 },
+      ).observe(frame);
+      tour.addEventListener('focusin', () => {
+        focused = true;
+        updatePause();
+      });
+      tour.addEventListener('focusout', (event) => {
+        focused = tour.contains(event.relatedTarget as Node | null);
+        updatePause();
+      });
+    }
+  }
+</script>
+
+<style>
+  .tour {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(36px, 6vw, 88px);
+  }
+
+  /* Blocs (au-dessus du halo de la capture) */
+  .cards {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 12px;
+  }
+
+  .tour-card {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 18px 20px 20px;
+    border-radius: var(--radius-m);
+    transition:
+      border-color 0.4s var(--ease),
+      background-color 0.4s var(--ease),
+      box-shadow 0.4s var(--ease);
+  }
+
+  .tour-card:hover {
+    border-color: var(--line-strong);
+  }
+
+  .tour-card.is-active {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    background:
+      linear-gradient(115deg, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+      var(--card);
+    box-shadow: 0 0 44px -14px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .feature-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
+    transition:
+      background-color 0.4s var(--ease),
+      color 0.4s var(--ease);
+  }
+
+  .is-active .feature-icon {
+    background: linear-gradient(145deg, var(--grad-a), var(--grad-b));
+    color: #fff;
+    box-shadow: 0 8px 20px -10px var(--grad-b);
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  /* Le bouton couvre tout le bloc. */
+  h3 button {
+    padding: 0;
+    border: 0;
+    background: none;
+    letter-spacing: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  h3 button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-m);
+  }
+
+  h3 button:focus-visible {
+    outline: none;
+  }
+
+  h3 button:focus-visible::after {
+    outline: 2.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .tour-card p {
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+
+  /* Capture */
+  .stage {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    gap: 24px;
+  }
+
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 4% -75% 10%;
+    z-index: -1;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 32%, transparent), transparent);
+    pointer-events: none;
+  }
+
+  .frame {
+    position: relative;
+    width: clamp(230px, 22vw + 30px, 290px);
+    aspect-ratio: 600 / 1304;
+    border-radius: clamp(22px, 2.4vw, 30px);
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+
+  .frame:active {
+    cursor: grabbing;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 40px 80px -30px rgb(0 0 0 / 0.65);
+    visibility: hidden;
+  }
+
+  /* La nouvelle capture arrive par le bas, l'ancienne s'efface vers le haut. */
+  .screen.is-active {
+    visibility: visible;
+    animation: screen-in 0.6s var(--ease);
+  }
+
+  .screen.was-active {
+    animation: screen-out 0.5s var(--ease);
+  }
+
+  @keyframes screen-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.975);
+    }
+  }
+
+  @keyframes screen-out {
+    from {
+      visibility: visible;
+    }
+    to {
+      visibility: visible;
+      opacity: 0;
+      transform: translateY(-10px) scale(1.015);
+    }
+  }
+
+  /* Progression */
+  .ticks {
+    display: flex;
+    gap: 6px;
+  }
+
+  .tick {
+    position: relative;
+    width: 24px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    cursor: pointer;
+    transition: width 0.42s var(--ease);
+  }
+
+  /* Zone de toucher plus grande que le trait. */
+  .tick::before {
+    content: '';
+    position: absolute;
+    inset: -14px -3px;
+  }
+
+  .tick.is-active {
+    width: 40px;
+  }
+
+  .tick > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--accent);
+    opacity: 0;
+    transform-origin: left;
+    transition: opacity 0.3s;
+  }
+
+  .tick.is-active > span {
+    opacity: 1;
+  }
+
+  .tour[data-autoplay] .tick.is-active > span {
+    animation: tour-progress 6s linear both;
+  }
+
+  .tour[data-autoplay].is-paused .tick.is-active > span {
+    animation-play-state: paused;
+  }
+
+  @keyframes tour-progress {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .tour {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stage {
+      order: -1;
+    }
+
+    .stage::before {
+      inset: 4% -10% 10%;
+    }
+  }
+</style>

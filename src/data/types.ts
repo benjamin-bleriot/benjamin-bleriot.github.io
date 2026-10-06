@@ -10,6 +10,11 @@ export interface Feature {
   icon: IconName;
   title: Text;
   text: Text;
+  /**
+   * Capture (numéro 1…n) affichée quand on touche le bloc ; par défaut, celle du même rang.
+   * Un numéro par langue si l'ordre des captures diffère d'une langue à l'autre.
+   */
+  shot?: number | Record<Lang, number>;
 }
 
 export interface Step {

@@ -36,6 +36,7 @@ export const apps: AppData[] = [
     features: [
       {
         icon: 'users',
+        shot: 6,
         title: { fr: 'De 2 à 8 joueurs', en: 'From 2 to 8 players', de: 'Von 2 bis 8 Spielern' },
         text: {
           fr: 'Une partie à deux ou autour d’une grande tablée : ajoutez les joueurs et lancez-vous en quelques secondes.',
@@ -45,6 +46,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'trophy',
+        shot: 2,
         title: { fr: 'Classement en temps réel', en: 'Live leaderboard', de: 'Rangliste in Echtzeit' },
         text: {
           fr: 'Totaux et classement se mettent à jour après chaque manche, et la victoire est célébrée comme il se doit.',
@@ -54,6 +56,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'target',
+        shot: 6,
         title: { fr: 'Score cible au choix', en: 'Custom target score', de: 'Zielpunktzahl nach Wahl' },
         text: {
           fr: 'Fixez le score qui met fin à la partie selon vos habitudes de jeu.',
@@ -63,6 +66,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'double',
+        shot: 3,
         title: { fr: 'Règle du score doublé', en: 'Doubled-score rule', de: 'Regel der doppelten Punkte' },
         text: {
           fr: 'Activez l’option « Doubler le score de fin de manche » et la pénalité est appliquée automatiquement.',
@@ -72,6 +76,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'history',
+        shot: 7,
         title: { fr: 'Historique des manches', en: 'Round history', de: 'Rundenverlauf' },
         text: {
           fr: 'Retrouvez chaque manche, corrigez un score saisi trop vite et revivez les retournements de situation.',
@@ -81,6 +86,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'repeat',
+        shot: 5,
         title: { fr: 'Revanche en un geste', en: 'One-tap rematch', de: 'Revanche mit einem Tipp' },
         text: {
           fr: 'Relancez une partie identique, avec les mêmes joueurs et les mêmes règles.',
@@ -243,6 +249,7 @@ export const apps: AppData[] = [
     features: [
       {
         icon: 'cards',
+        shot: 2,
         title: { fr: 'Saisie guidée des cartes', en: 'Guided card entry', de: 'Geführte Karteneingabe' },
         text: {
           fr: 'Touchez les cartes de 0 à 12, ajoutez les bonus de +2 à +10 et le multiplicateur ×2 : le score se calcule tout seul.',
@@ -252,6 +259,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'sparkles',
+        shot: 4,
         title: { fr: 'Flip 7 détecté', en: 'Flip 7 detection', de: 'Flip 7 erkannt' },
         text: {
           fr: 'Sept cartes différentes ? Les 15 points de bonus sont ajoutés aussitôt, avec un badge et un compteur par joueur.',
@@ -261,6 +269,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'bolt',
+        shot: 1,
         title: { fr: 'Mode Vengeance', en: 'Vengeance mode', de: 'Vengeance-Modus' },
         text: {
           fr: 'Cartes de 0 à 13, divisions et malus : la variante Vengeance est entièrement prise en charge.',
@@ -270,6 +279,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'trophy',
+        shot: 5,
         title: { fr: 'Course aux 200 points', en: 'Race to 200', de: 'Wettlauf bis 200' },
         text: {
           fr: 'Le classement se met à jour après chaque tour et la partie s’arrête d’elle-même à 200 points, confettis compris.',
@@ -279,6 +289,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'history',
+        shot: 7,
         title: { fr: 'Historique des scores', en: 'Score history', de: 'Punkteverlauf' },
         text: {
           fr: 'Retrouvez chaque manche et les cartes jouées. Un appui long permet de corriger ou de supprimer un score.',
@@ -288,6 +299,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'repeat',
+        shot: 6,
         title: { fr: 'Revanche immédiate', en: 'Instant rematch', de: 'Sofortige Revanche' },
         text: {
           fr: 'Relancez la même partie, dupliquez-la ou retrouvez vos joueurs enregistrés pour démarrer plus vite.',
@@ -439,6 +451,7 @@ export const apps: AppData[] = [
     features: [
       {
         icon: 'calendar',
+        shot: 3,
         title: { fr: 'Calendrier des courses', en: 'Race calendar', de: 'Wettkampfkalender' },
         text: {
           fr: 'Visualisez toutes vos courses de l’année dans une vue annuelle claire et motivante.',
@@ -448,6 +461,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'flag',
+        shot: 4,
         title: { fr: 'Chaque détail compte', en: 'Every detail', de: 'Jedes Detail zählt' },
         text: {
           fr: 'Nom, date, distance, dénivelé et ville : une course s’ajoute en quelques secondes.',
@@ -457,6 +471,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'timer',
+        shot: { fr: 5, en: 6, de: 6 },
         title: { fr: 'Vos résultats', en: 'Your results', de: 'Deine Ergebnisse' },
         text: {
           fr: 'Enregistrez votre temps et gardez une trace de chacune de vos performances.',
@@ -466,6 +481,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'heart',
+        shot: { fr: 5, en: 6, de: 6 },
         title: { fr: 'Vos sensations', en: 'How it felt', de: 'Dein Gefühl' },
         text: {
           fr: 'Donnez une note à la course, décrivez vos impressions et les conditions du jour.',
@@ -475,6 +491,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'history',
+        shot: { fr: 6, en: 5, de: 5 },
         title: { fr: 'Historique mensuel', en: 'Monthly history', de: 'Monatlicher Verlauf' },
         text: {
           fr: 'Revivez vos courses passées, mois après mois, et mesurez le chemin parcouru.',
@@ -484,6 +501,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'mountain',
+        shot: 1,
         title: { fr: 'Route, trail et triathlon', en: 'Road, trail and triathlon', de: 'Straße, Trail und Triathlon' },
         text: {
           fr: 'Distinguez vos types de courses pour mieux organiser votre saison.',
@@ -630,6 +648,7 @@ export const apps: AppData[] = [
     features: [
       {
         icon: 'receipt',
+        shot: 3,
         title: { fr: 'Saisie express', en: 'Quick entry', de: 'Blitzschnelle Eingabe' },
         text: {
           fr: 'Montant, date, catégorie, note et portefeuille : une dépense s’ajoute en quelques secondes.',
@@ -639,6 +658,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'calendar',
+        shot: 2,
         title: { fr: 'Calendrier des dépenses', en: 'Spending calendar', de: 'Ausgabenkalender' },
         text: {
           fr: 'Parcourez vos dépenses jour par jour, avec le total de chaque journée.',
@@ -648,6 +668,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'tag',
+        shot: 7,
         title: { fr: 'Catégories sur mesure', en: 'Custom categories', de: 'Eigene Kategorien' },
         text: {
           fr: 'Gardez les catégories proposées ou créez les vôtres, avec leur icône et leur couleur.',
@@ -657,6 +678,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'wallet',
+        shot: 6,
         title: { fr: 'Plusieurs portefeuilles', en: 'Multiple wallets', de: 'Mehrere Geldbörsen' },
         text: {
           fr: 'Séparez comptes, cartes, voyages ou devises : chaque portefeuille a sa propre monnaie.',
@@ -666,6 +688,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'pie',
+        shot: 4,
         title: { fr: 'Statistiques claires', en: 'Clear statistics', de: 'Klare Statistiken' },
         text: {
           fr: 'Analysez vos dépenses par semaine, mois ou année, avec la répartition par catégorie.',
@@ -675,6 +698,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'repeat',
+        shot: 5,
         title: { fr: 'Dépenses récurrentes', en: 'Recurring expenses', de: 'Wiederkehrende Ausgaben' },
         text: {
           fr: 'Abonnements, loyer, factures : automatisez ce qui revient chaque mois.',
@@ -684,6 +708,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'bell',
+        shot: 9,
         title: { fr: 'Rappel quotidien', en: 'Daily reminder', de: 'Tägliche Erinnerung' },
         text: {
           fr: 'Une notification pour ne jamais oublier de noter vos dépenses du jour.',
@@ -693,6 +718,7 @@ export const apps: AppData[] = [
       },
       {
         icon: 'cloud',
+        shot: 8,
         title: { fr: 'Synchronisation iCloud', en: 'iCloud sync', de: 'iCloud-Synchronisierung' },
         text: {
           fr: 'Retrouvez vos données à jour sur tous vos appareils Apple, via votre propre iCloud.',

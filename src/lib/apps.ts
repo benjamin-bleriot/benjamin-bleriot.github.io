@@ -60,6 +60,16 @@ export function pickShots(app: AppData, lang: Lang, numbers: readonly number[] =
   return numbers.map((n) => all[n - 1]).filter((shot): shot is string => Boolean(shot));
 }
 
+/** Capture affichée pour chaque bloc de fonctionnalité (voir `Feature.shot`), ou aucune si l'app n'en a pas. */
+export function featureShots(app: AppData, lang: Lang): string[] {
+  const all = screenshots(app, lang);
+  if (!all.length) return [];
+  return app.features.map((feature, index) => {
+    const n = typeof feature.shot === 'object' ? feature.shot[lang] : (feature.shot ?? index + 1);
+    return all[n - 1] ?? all[index % all.length];
+  });
+}
+
 export const rating = (app: AppData) => store(app)?.rating;
 
 export const languagesOf = (app: AppData) => store(app)?.languages ?? app.languages ?? [];
