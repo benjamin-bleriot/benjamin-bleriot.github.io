@@ -13,6 +13,8 @@ interface Props {
 
 const { features, shots, name, lang } = Astro.props;
 const t = useTranslations(lang);
+// Captures déjà dans un cadre d'iPhone (voir tourShots) : ni coins arrondis ni bordure.
+const framed = shots.some((src) => src.includes('/tour/'));
 
 // Une seule image par capture : deux blocs peuvent montrer la même.
 const screens = [...new Set(shots)];
@@ -54,15 +56,15 @@ const altOf = (screen: number) =>
   </ul>
 
   <div class="stage">
-    <div class="frame" id="tour-screen">
+    <div class:list={['frame', { 'is-framed': framed }]} id="tour-screen">
       {
         screens.map((src, index) => (
           <img
             class:list={['screen', { 'is-active': index === screenOf[0] }]}
             src={src}
             alt={altOf(index)}
-            width="600"
-            height="1304"
+            width={framed ? 640 : 600}
+            height={framed ? 1306 : 1304}
             loading="lazy"
             decoding="async"
             draggable="false"
@@ -309,6 +311,17 @@ const altOf = (screen: number) =>
       0 0 0 1px var(--line),
       0 40px 80px -30px rgb(0 0 0 / 0.65);
     visibility: hidden;
+  }
+
+  .frame.is-framed {
+    width: clamp(240px, 23vw + 30px, 310px);
+    aspect-ratio: 640 / 1306;
+    border-radius: 0;
+  }
+
+  .is-framed .screen {
+    box-shadow: none;
+    filter: drop-shadow(0 34px 40px rgb(0 0 0 / 0.5));
   }
 
   /* La nouvelle capture arrive par le bas, l'ancienne s'efface vers le haut. */

@@ -97,6 +97,9 @@ Skyjo Keeper le jour où le calcul du score par photo sort).
    s’affiche quand on touche le bloc (par défaut, le bloc n montre la capture n). Si l’ordre
    des captures change selon la langue, comme pour Jogr, donnez un numéro par langue :
    `shot: { fr: 5, en: 6, de: 6 }`.
+   Pour montrer d’autres captures que celles de l’App Store, placez-les déjà encadrées dans
+   `public/images/apps/<slug>/tour/<langue>/` (`01.webp`, `02.webp`…, une par fonctionnalité
+   dans l’ordre des blocs, 640 × 1306) : elles remplacent alors `shot`, comme pour Flip.
 5. `npm run dev` pour vérifier, puis poussez sur `main`.
 
 Pour une app pas encore publiée, utilisez `status: 'soon'` et placez l’icône dans

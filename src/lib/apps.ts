@@ -60,8 +60,26 @@ export function pickShots(app: AppData, lang: Lang, numbers: readonly number[] =
   return numbers.map((n) => all[n - 1]).filter((shot): shot is string => Boolean(shot));
 }
 
+/**
+ * Captures encadrées propres à la page (public/images/apps/<slug>/tour/<langue>/),
+ * une par fonctionnalité dans l'ordre des blocs ; prioritaires sur celles de l'App Store.
+ */
+export function tourShots(app: AppData, lang: Lang): string[] {
+  for (const candidate of [lang, ...(lang === 'en' ? ['fr'] : ['en', 'fr'])]) {
+    const dir = join(process.cwd(), 'public', 'images', 'apps', app.slug, 'tour', candidate);
+    if (!existsSync(dir)) continue;
+    const files = readdirSync(dir)
+      .filter((file) => /\.(webp|png|jpe?g)$/i.test(file))
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    if (files.length) return files.map((file) => `/images/apps/${app.slug}/tour/${candidate}/${file}`);
+  }
+  return [];
+}
+
 /** Capture affichée pour chaque bloc de fonctionnalité (voir `Feature.shot`), ou aucune si l'app n'en a pas. */
 export function featureShots(app: AppData, lang: Lang): string[] {
+  const framed = tourShots(app, lang);
+  if (framed.length) return app.features.map((_, index) => framed[index % framed.length]);
   const all = screenshots(app, lang);
   if (!all.length) return [];
   return app.features.map((feature, index) => {
