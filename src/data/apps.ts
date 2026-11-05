@@ -383,6 +383,17 @@ export const apps: AppData[] = [
         original: 'fr',
       },
       {
+        title: { fr: 'Super application', en: 'Great app', de: 'Super App' },
+        text: {
+          fr: 'Très intuitive, facile à utiliser et jolie !',
+          en: 'Very intuitive, easy to use and good-looking!',
+          de: 'Sehr intuitiv, einfach zu bedienen und schön!',
+        },
+        author: 'La reine du bitume',
+        rating: 5,
+        original: 'fr',
+      },
+      {
         title: { fr: 'Top', en: 'Great', de: 'Top' },
         text: {
           fr: 'Application pratique qui fonctionne bien ! Le fait qu’il retienne le nom après l’enregistrement, c’est génial pour créer des parties avec différents groupes d’amis 🥳',
@@ -390,13 +401,6 @@ export const apps: AppData[] = [
           de: 'Praktische App, die gut funktioniert! Dass sie sich die Namen nach dem Speichern merkt, ist super, um Partien mit verschiedenen Freundesgruppen anzulegen 🥳',
         },
         author: 'Erasmus974',
-        rating: 4,
-        original: 'fr',
-      },
-      {
-        title: { fr: 'Super', en: 'Super', de: 'Super' },
-        text: { fr: 'Hyper pratique !', en: 'Super handy!', de: 'Total praktisch!' },
-        author: 'Vivi le petit radis',
         rating: 4,
         original: 'fr',
       },

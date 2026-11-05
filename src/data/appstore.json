@@ -1,6 +1,6 @@
 {
   "developerId": "1812098736",
-  "fetchedAt": "2026-10-01T20:27:53.715Z",
+  "fetchedAt": "2026-11-05T09:00:25.088Z",
   "apps": {
     "6754793003": {
       "bundleId": "com.benjaminbleriot.skyjokeeper",
@@ -16,46 +16,46 @@
         "JA"
       ],
       "genre": "Games",
-      "fileSizeBytes": 11636736,
+      "fileSizeBytes": 15173632,
       "rating": {
-        "average": 4.659,
-        "count": 258,
+        "average": 4.669,
+        "count": 275,
         "storefronts": {
           "fr": {
-            "average": 4.676,
-            "count": 145
+            "average": 4.699,
+            "count": 153
           },
           "us": {
-            "average": 4.62,
-            "count": 50
+            "average": 4.635,
+            "count": 52
           },
           "de": {
-            "average": 4.643,
-            "count": 14
+            "average": 4.688,
+            "count": 16
           },
           "gb": {
             "average": 4.833,
             "count": 6
           },
           "ca": {
-            "average": 4.933,
-            "count": 15
+            "average": 4.875,
+            "count": 16
           },
           "be": {
             "average": 4,
             "count": 3
           },
           "ch": {
-            "average": 4.538,
-            "count": 13
+            "average": 4.6,
+            "count": 15
           },
           "es": {
             "average": 5,
             "count": 1
           },
           "nl": {
-            "average": 4.667,
-            "count": 3
+            "average": 4.2,
+            "count": 5
           },
           "at": {
             "average": 5,
@@ -78,27 +78,27 @@
       "locales": {
         "fr": {
           "name": "Skyjo - Compteur de points",
-          "version": "1.5.0",
-          "releaseNotes": "Nouveautés de cette version\n\n• Ajout de la variante Japonaise\n• Amélioration de la stabilité et des performances\n• Corrections de bugs mineurs\n\nMerci pour votre soutien et bonnes parties !",
-          "currentVersionReleaseDate": "2026-06-16T22:06:04Z",
+          "version": "1.6.0",
+          "releaseNotes": "Nouveautés:\n- SkyJo Score Keeper est désormais compatible avec iOS 27, pour une expérience plus fluide et plus soignée.\n\nPour toute demande d’amélioration ou en cas de problème, vous pouvez m’écrire à benjamin.bleriot.pro@gmail.com.",
+          "currentVersionReleaseDate": "2026-10-05T23:02:16Z",
           "price": 0,
           "formattedPrice": "Gratuit",
           "url": "https://apps.apple.com/fr/app/skyjo-compteur-de-points/id6754793003"
         },
         "en": {
           "name": "Skyjo - Score Keeper",
-          "version": "1.5.0",
-          "releaseNotes": "What's new in this version\n\n• Added support for the Japanese variant\n• Improved stability and performance\n• Minor bug fixes\nThanks for your support and enjoy your games!",
-          "currentVersionReleaseDate": "2026-06-16T22:06:04Z",
+          "version": "1.6.0",
+          "releaseNotes": "What's New:\n- SkyJo Score Keeper now supports iOS 27, with a smoother and more polished experience.\n\nFor feature requests or if you run into a problem, email me at benjamin.bleriot.pro@gmail.com.",
+          "currentVersionReleaseDate": "2026-10-05T23:02:16Z",
           "price": 0,
           "formattedPrice": "Free",
           "url": "https://apps.apple.com/us/app/skyjo-score-keeper/id6754793003"
         },
         "de": {
           "name": "Skyjo – Punkteblock",
-          "version": "1.5.0",
-          "releaseNotes": "What's new in this version\n\n• Added support for the Japanese variant\n• Improved stability and performance\n• Minor bug fixes\n\nThanks for your support and enjoy your games!",
-          "currentVersionReleaseDate": "2026-06-16T22:06:04Z",
+          "version": "1.6.0",
+          "releaseNotes": "Neuigkeiten:\n- SkyJo Score Keeper unterstützt jetzt iOS 27 – für ein flüssigeres und noch runderes Erlebnis.\n\nFür Verbesserungsvorschläge oder bei Problemen können Sie mir eine E-Mail an benjamin.bleriot.pro@gmail.com senden.",
+          "currentVersionReleaseDate": "2026-10-05T23:02:16Z",
           "price": 0,
           "formattedPrice": "Gratis",
           "url": "https://apps.apple.com/de/app/skyjo-punkteblock/id6754793003"
@@ -117,38 +117,38 @@
         "ES"
       ],
       "genre": "Games",
-      "fileSizeBytes": 12435456,
+      "fileSizeBytes": 12566528,
       "rating": {
-        "average": 4.685,
-        "count": 203,
+        "average": 4.691,
+        "count": 230,
         "storefronts": {
           "fr": {
-            "average": 4.74,
-            "count": 77
+            "average": 4.699,
+            "count": 83
           },
           "us": {
-            "average": 4.683,
-            "count": 41
+            "average": 4.705,
+            "count": 44
           },
           "de": {
-            "average": 4.518,
-            "count": 56
+            "average": 4.58,
+            "count": 69
           },
           "gb": {
             "average": 5,
-            "count": 2
+            "count": 3
           },
           "ca": {
             "average": 5,
-            "count": 14
+            "count": 15
           },
           "be": {
             "average": 5,
-            "count": 1
+            "count": 2
           },
           "ch": {
             "average": 5,
-            "count": 4
+            "count": 6
           },
           "es": {
             "average": 5,
@@ -175,27 +175,27 @@
       "locales": {
         "fr": {
           "name": "Flip - Compteur de points",
-          "version": "1.7.0",
-          "releaseNotes": "Nouveautés:\n- L’historique des scores est là ! Retrouvez chaque manche et les cartes jouées. Maintenez la carte appuyée pour modifier ou supprimer le score.\n- Ajoutez vos joueurs plus rapidement grâce aux noms enregistrés, profitez d’un classement plus lisible et utilisez l’app en allemand, italien ou espagnol.\n\nPour toute demande d’amélioration ou en cas de problème, vous pouvez m’écrire à benjamin.bleriot.pro@gmail.com.",
-          "currentVersionReleaseDate": "2026-08-27T16:35:20Z",
+          "version": "1.8.1",
+          "releaseNotes": "Nouveautés:\n- Flip 7 est désormais compatible avec iOS 27.\n- Diverses améliorations de stabilité et de performance.\n\nPour toute demande d’amélioration ou en cas de problème, vous pouvez m’écrire à benjamin.bleriot.pro@gmail.com.",
+          "currentVersionReleaseDate": "2026-10-05T18:44:02Z",
           "price": 0,
           "formattedPrice": "Gratuit",
           "url": "https://apps.apple.com/fr/app/flip-compteur-de-points/id6760317673"
         },
         "en": {
           "name": "Flip - Score tracker",
-          "version": "1.7.0",
-          "releaseNotes": "What's New:\n- Score history is here! Review every round and the cards played. Press and hold the card to edit or delete the score.\n- Add players faster with saved player names, enjoy clearer rankings, and use the app in French, German, Italian, or Spanish.\n\nFor feature requests or if you run into a problem, email me at benjamin.bleriot.pro@gmail.com.",
-          "currentVersionReleaseDate": "2026-08-27T16:35:20Z",
+          "version": "1.8.1",
+          "releaseNotes": "What's New:\n- Flip 7 now supports iOS 27.\n- Various stability and performance improvements.\n\nFor feature requests or if you run into a problem, email me at benjamin.bleriot.pro@gmail.com.",
+          "currentVersionReleaseDate": "2026-10-05T18:44:02Z",
           "price": 0,
           "formattedPrice": "Free",
           "url": "https://apps.apple.com/us/app/flip-score-tracker/id6760317673"
         },
         "de": {
           "name": "Flip - Punktezähler",
-          "version": "1.7.0",
-          "releaseNotes": "Neuigkeiten:\n- Der Punkteverlauf ist da! Sehen Sie sich jede Runde und die gespielten Karten an. Halten Sie die Karte gedrückt, um den Punktestand zu bearbeiten oder zu löschen.\n- Fügen Sie Spieler dank gespeicherter Namen schneller hinzu, profitieren Sie von einer übersichtlicheren Rangliste und nutzen Sie die App auf Französisch, Italienisch oder Spanisch.\n\nFür Verbesserungsvorschläge oder bei Problemen können Sie mir eine E-Mail an benjamin.bleriot.pro@gmail.com senden.",
-          "currentVersionReleaseDate": "2026-08-27T16:35:20Z",
+          "version": "1.8.1",
+          "releaseNotes": "Neuigkeiten:\n- Flip 7 unterstützt jetzt iOS 27.\n- Verschiedene Stabilitäts- und Leistungsverbesserungen.\n\nFür Verbesserungsvorschläge oder bei Problemen können Sie mir eine E-Mail an benjamin.bleriot.pro@gmail.com senden.",
+          "currentVersionReleaseDate": "2026-10-05T18:44:02Z",
           "price": 0,
           "formattedPrice": "Gratis",
           "url": "https://apps.apple.com/de/app/flip-punktez%C3%A4hler/id6760317673"
@@ -215,8 +215,8 @@
       "genre": "Health & Fitness",
       "fileSizeBytes": 3137536,
       "rating": {
-        "average": 4.846,
-        "count": 13,
+        "average": 4.857,
+        "count": 14,
         "storefronts": {
           "fr": {
             "average": 5,
@@ -231,6 +231,10 @@
             "count": 1
           },
           "gb": {
+            "average": 5,
+            "count": 1
+          },
+          "ca": {
             "average": 5,
             "count": 1
           },
