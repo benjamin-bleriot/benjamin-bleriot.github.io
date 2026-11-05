@@ -16,8 +16,25 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEVELOPER_ID = '1812098736';
-/** Boutiques interrogées pour agréger les notes (la première sert aux textes FR, `us` aux textes EN, `de` aux textes DE). */
-const STOREFRONTS = ['fr', 'us', 'de', 'gb', 'ca', 'be', 'ch', 'it', 'es', 'nl', 'at', 'lu', 'dk', 'jp', 'au'];
+/**
+ * Boutiques interrogées pour agréger les notes : toutes celles de l'App Store, car une note
+ * isolée au Mexique ou en Norvège compte aussi dans le total affiché par App Store Connect.
+ * `fr` sert aux textes FR, `us` aux textes EN, `de` aux textes DE.
+ */
+const STOREFRONTS = [
+  'fr', 'us', 'de', 'gb', 'ca', 'be', 'ch', 'it', 'es', 'nl', 'at', 'lu', 'dk', 'jp', 'au',
+  'ae', 'ag', 'ai', 'al', 'am', 'ao', 'ar', 'az', 'ba', 'bb', 'bf', 'bg', 'bh', 'bj', 'bm',
+  'bn', 'bo', 'br', 'bs', 'bt', 'bw', 'by', 'bz', 'cd', 'cg', 'ci', 'cl', 'cm', 'cn', 'co',
+  'cr', 'cv', 'cy', 'cz', 'dm', 'do', 'dz', 'ec', 'ee', 'eg', 'fi', 'fj', 'fm', 'ga', 'gd',
+  'ge', 'gh', 'gm', 'gr', 'gt', 'gw', 'gy', 'hk', 'hn', 'hr', 'hu', 'id', 'ie', 'il', 'in',
+  'iq', 'is', 'jm', 'jo', 'ke', 'kg', 'kh', 'kn', 'kr', 'kw', 'ky', 'kz', 'la', 'lb', 'lc',
+  'lk', 'lr', 'lt', 'lv', 'ly', 'ma', 'md', 'me', 'mg', 'mk', 'ml', 'mm', 'mn', 'mo', 'mr',
+  'ms', 'mt', 'mu', 'mv', 'mw', 'mx', 'my', 'mz', 'na', 'ne', 'ng', 'ni', 'no', 'np', 'nr',
+  'nz', 'om', 'pa', 'pe', 'pg', 'ph', 'pk', 'pl', 'pt', 'pw', 'py', 'qa', 'ro', 'rs', 'rw',
+  'sa', 'sb', 'sc', 'se', 'sg', 'si', 'sk', 'sl', 'sn', 'sr', 'st', 'sv', 'sz', 'tc', 'td',
+  'th', 'tj', 'tm', 'tn', 'to', 'tr', 'tt', 'tw', 'tz', 'ua', 'ug', 'uy', 'uz', 'vc', 've',
+  'vg', 'vn', 'vu', 'xk', 'ye', 'za', 'zm', 'zw',
+];
 const LOCALE_STOREFRONT = { fr: 'fr', en: 'us', de: 'de' };
 const BADGE_LOCALES = { fr: 'fr-fr', en: 'en-us', de: 'de-de' };
 const SCREENSHOT_WIDTH = 600;

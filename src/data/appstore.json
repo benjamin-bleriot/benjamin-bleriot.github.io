@@ -1,6 +1,6 @@
 {
   "developerId": "1812098736",
-  "fetchedAt": "2026-11-05T09:00:25.088Z",
+  "fetchedAt": "2026-11-05T09:12:15.983Z",
   "apps": {
     "6754793003": {
       "bundleId": "com.benjaminbleriot.skyjokeeper",
@@ -18,8 +18,8 @@
       "genre": "Games",
       "fileSizeBytes": 15173632,
       "rating": {
-        "average": 4.669,
-        "count": 275,
+        "average": 4.666,
+        "count": 287,
         "storefronts": {
           "fr": {
             "average": 4.699,
@@ -72,6 +72,34 @@
           "au": {
             "average": 3.667,
             "count": 3
+          },
+          "br": {
+            "average": 5,
+            "count": 1
+          },
+          "co": {
+            "average": 5,
+            "count": 1
+          },
+          "hr": {
+            "average": 4,
+            "count": 1
+          },
+          "mt": {
+            "average": 5,
+            "count": 1
+          },
+          "mx": {
+            "average": 5,
+            "count": 4
+          },
+          "nz": {
+            "average": 1,
+            "count": 1
+          },
+          "se": {
+            "average": 5,
+            "count": 3
           }
         }
       },
@@ -119,8 +147,8 @@
       "genre": "Games",
       "fileSizeBytes": 12566528,
       "rating": {
-        "average": 4.691,
-        "count": 230,
+        "average": 4.719,
+        "count": 253,
         "storefronts": {
           "fr": {
             "average": 4.699,
@@ -169,6 +197,66 @@
           "au": {
             "average": 5,
             "count": 2
+          },
+          "ar": {
+            "average": 5,
+            "count": 1
+          },
+          "bh": {
+            "average": 5,
+            "count": 1
+          },
+          "bo": {
+            "average": 5,
+            "count": 1
+          },
+          "br": {
+            "average": 5,
+            "count": 1
+          },
+          "cr": {
+            "average": 5,
+            "count": 1
+          },
+          "cz": {
+            "average": 5,
+            "count": 1
+          },
+          "ee": {
+            "average": 5,
+            "count": 1
+          },
+          "is": {
+            "average": 5,
+            "count": 1
+          },
+          "mt": {
+            "average": 5,
+            "count": 1
+          },
+          "mx": {
+            "average": 5,
+            "count": 5
+          },
+          "no": {
+            "average": 5,
+            "count": 2
+          },
+          "pt": {
+            "average": 5,
+            "count": 4
+          },
+          "sk": {
+            "average": 5,
+            "count": 1
+          },
+          "uy": {
+            "average": 5,
+            "count": 1
+          },
+          "za": {
+            "average": 5,
+            "count": 1
           }
         }
       },
@@ -215,8 +303,8 @@
       "genre": "Health & Fitness",
       "fileSizeBytes": 3137536,
       "rating": {
-        "average": 4.857,
-        "count": 14,
+        "average": 4.882,
+        "count": 17,
         "storefronts": {
           "fr": {
             "average": 5,
@@ -244,6 +332,14 @@
           },
           "es": {
             "average": 4,
+            "count": 1
+          },
+          "my": {
+            "average": 5,
+            "count": 2
+          },
+          "sg": {
+            "average": 5,
             "count": 1
           }
         }
