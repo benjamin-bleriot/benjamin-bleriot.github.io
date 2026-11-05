@@ -13,7 +13,7 @@ interface Props {
 
 const { features, shots, name, lang } = Astro.props;
 const t = useTranslations(lang);
-// Captures déjà dans un cadre d'iPhone (voir tourShots) : ni coins arrondis ni bordure.
+// Captures déjà dans un cadre d'iPhone (voir framedShots) : ni coins arrondis ni bordure.
 const framed = shots.some((src) => src.includes('/tour/'));
 
 // Une seule image par capture : deux blocs peuvent montrer la même.

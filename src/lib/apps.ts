@@ -61,24 +61,31 @@ export function pickShots(app: AppData, lang: Lang, numbers: readonly number[] =
 }
 
 /**
- * Captures encadrées propres à la page (public/images/apps/<slug>/tour/<langue>/),
- * une par fonctionnalité dans l'ordre des blocs ; prioritaires sur celles de l'App Store.
+ * Captures déjà encadrées propres à la page (public/images/apps/<slug>/<dossier>/<langue>/),
+ * prioritaires sur celles de l'App Store : `tour` (une par fonctionnalité, dans l'ordre des
+ * blocs) et `hero` (gauche, centre, droite).
  */
-export function tourShots(app: AppData, lang: Lang): string[] {
+export function framedShots(app: AppData, lang: Lang, folder: 'tour' | 'hero'): string[] {
   for (const candidate of [lang, ...(lang === 'en' ? ['fr'] : ['en', 'fr'])]) {
-    const dir = join(process.cwd(), 'public', 'images', 'apps', app.slug, 'tour', candidate);
+    const dir = join(process.cwd(), 'public', 'images', 'apps', app.slug, folder, candidate);
     if (!existsSync(dir)) continue;
     const files = readdirSync(dir)
       .filter((file) => /\.(webp|png|jpe?g)$/i.test(file))
       .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-    if (files.length) return files.map((file) => `/images/apps/${app.slug}/tour/${candidate}/${file}`);
+    if (files.length) return files.map((file) => `/images/apps/${app.slug}/${folder}/${candidate}/${file}`);
   }
   return [];
 }
 
+/** Captures du haut de page : celles encadrées (`hero`) si présentes, sinon `shots.hero`. */
+export function heroShots(app: AppData, lang: Lang): string[] {
+  const framed = framedShots(app, lang, 'hero');
+  return framed.length === 3 ? framed : pickShots(app, lang, app.shots?.hero);
+}
+
 /** Capture affichée pour chaque bloc de fonctionnalité (voir `Feature.shot`), ou aucune si l'app n'en a pas. */
 export function featureShots(app: AppData, lang: Lang): string[] {
-  const framed = tourShots(app, lang);
+  const framed = framedShots(app, lang, 'tour');
   if (framed.length) return app.features.map((_, index) => framed[index % framed.length]);
   const all = screenshots(app, lang);
   if (!all.length) return [];

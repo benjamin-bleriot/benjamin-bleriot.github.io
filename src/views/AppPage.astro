@@ -11,7 +11,7 @@ import { buildPrivacy } from '../data/legal/privacy';
 import { site } from '../data/site';
 import type { AppData, Lang } from '../data/types';
 import { formatDate, formatNumber, formatRating, localizePath, useTranslations } from '../i18n';
-import { appStoreUrl, featureShots, iconPng, iconUrl, languagesOf, pickShots, rating, store } from '../lib/apps';
+import { appStoreUrl, featureShots, heroShots as heroShotsOf, iconPng, iconUrl, languagesOf, rating, store } from '../lib/apps';
 
 interface Props {
   app: AppData;
@@ -25,7 +25,10 @@ const storeUrl = appStoreUrl(app);
 const data = store(app);
 const score = rating(app);
 const tourShots = featureShots(app, lang);
-const heroShots = pickShots(app, lang, app.shots?.hero);
+const heroShots = heroShotsOf(app, lang);
+// Captures déjà dans un cadre d'iPhone : ni coins arrondis ni bordure.
+const heroFramed = heroShots.some((src) => src.includes('/hero/'));
+const heroSize = heroFramed ? { width: 640, height: 1306 } : { width: 600, height: 1304 };
 const languages = languagesOf(app);
 const privacy = buildPrivacy(app, lang);
 const path = `/${app.slug}/`;
@@ -149,10 +152,10 @@ const supportItems = [
       <div class="hero-art" aria-hidden="true">
         {
           heroShots.length === 3 ? (
-            <div class="fan">
-              <img class="shot shot-left" src={heroShots[0]} alt="" width="600" height="1304" />
-              <img class="shot shot-right" src={heroShots[2]} alt="" width="600" height="1304" />
-              <img class="shot shot-center" src={heroShots[1]} alt="" width="600" height="1304" fetchpriority="high" />
+            <div class:list={['fan', { 'is-framed': heroFramed }]}>
+              <img class="shot shot-left" src={heroShots[0]} alt="" {...heroSize} />
+              <img class="shot shot-right" src={heroShots[2]} alt="" {...heroSize} />
+              <img class="shot shot-center" src={heroShots[1]} alt="" {...heroSize} fetchpriority="high" />
             </div>
           ) : (
             <div class="icon-stage">
@@ -558,6 +561,12 @@ const supportItems = [
     z-index: 2;
     width: 270px;
     transform: translate(-50%, -50%);
+  }
+
+  .is-framed .shot {
+    border-radius: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 34px 40px rgb(0 0 0 / 0.5));
   }
 
   .shot-left {
