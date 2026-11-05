@@ -77,6 +77,15 @@ export function framedShots(app: AppData, lang: Lang, folder: 'tour' | 'hero'): 
   return [];
 }
 
+/**
+ * Captures de la carte d'accueil [devant, derrière] : le centre et la gauche du haut de page
+ * encadré si présent (le haut de leurs écrans diffère le plus), sinon `shots.card`.
+ */
+export function cardShots(app: AppData, lang: Lang): string[] {
+  const framed = framedShots(app, lang, 'hero');
+  return framed.length === 3 ? [framed[1], framed[0]] : pickShots(app, lang, app.shots?.card);
+}
+
 /** Captures du haut de page : celles encadrées (`hero`) si présentes, sinon `shots.hero`. */
 export function heroShots(app: AppData, lang: Lang): string[] {
   const framed = framedShots(app, lang, 'hero');

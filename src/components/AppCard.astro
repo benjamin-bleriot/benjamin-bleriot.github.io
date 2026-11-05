@@ -3,7 +3,7 @@ import AppIcon from './AppIcon.astro';
 import Icon from './Icon.astro';
 import type { AppData, Lang } from '../data/types';
 import { formatRating, localizePath, useTranslations } from '../i18n';
-import { pickShots, rating, themeStyle } from '../lib/apps';
+import { cardShots, rating, themeStyle } from '../lib/apps';
 
 interface Props {
   app: AppData;
@@ -12,7 +12,10 @@ interface Props {
 
 const { app, lang } = Astro.props;
 const t = useTranslations(lang);
-const [front, back] = pickShots(app, lang, app.shots?.card);
+const [front, back] = cardShots(app, lang);
+// Captures déjà dans un cadre d'iPhone : ni coins arrondis ni bordure.
+const framed = Boolean(front?.includes('/hero/'));
+const size = framed ? { width: 640, height: 1306 } : { width: 600, height: 1304 };
 const score = rating(app);
 ---
 
@@ -22,9 +25,9 @@ const score = rating(app);
     <h3 set:html={app.headline[lang]} />
   </div>
 
-  <div class="shots" aria-hidden="true">
-    {back && <img class="shot back" src={back} alt="" width="600" height="1304" loading="lazy" decoding="async" />}
-    {front && <img class="shot front" src={front} alt="" width="600" height="1304" loading="lazy" decoding="async" />}
+  <div class:list={['shots', { 'is-framed': framed }]} aria-hidden="true">
+    {back && <img class="shot back" src={back} alt="" {...size} loading="lazy" decoding="async" />}
+    {front && <img class="shot front" src={front} alt="" {...size} loading="lazy" decoding="async" />}
   </div>
 
   <div class="bar">
@@ -107,6 +110,15 @@ const score = rating(app);
       0 0 0 1px rgb(255 255 255 / 0.18),
       0 30px 60px -20px rgb(0 0 0 / 0.55);
     transition: transform 0.7s var(--ease);
+  }
+
+  .is-framed .shot {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .is-framed .front {
+    filter: drop-shadow(0 30px 34px rgb(0 0 0 / 0.45));
   }
 
   .front {
